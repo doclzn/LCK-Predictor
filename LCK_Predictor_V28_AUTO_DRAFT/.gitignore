@@ -1,0 +1,17 @@
+# CSVs do Oracle's Elixir (~294 MB) - baixar separadamente, ver HANDOFF
+data/oracles_elixir/
+
+# Banco e backups
+data/*.sqlite
+data/*.sqlite-journal
+data/*.backup-*.sqlite
+
+# Runtime portatil do Python
+runtime/
+
+# Caches
+__pycache__/
+*.pyc
+
+# Artefatos de captura HTML
+_gol_*.html

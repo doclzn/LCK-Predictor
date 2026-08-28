@@ -1,8 +1,14 @@
-# Bancos de dados e backups (185 MB) - dados derivados do Oracle's Elixir
+# Bancos de dados e backups - dados derivados do Oracle's Elixir.
+# O banco principal E versionado, mas comprimido (~14 MB em vez de 57 MB):
+# veja scripts/db_snapshot.py. O .sqlite cru fica de fora.
 LCK_Predictor_V28_AUTO_DRAFT/data/*.sqlite
 LCK_Predictor_V28_AUTO_DRAFT/data/*.sqlite-shm
 LCK_Predictor_V28_AUTO_DRAFT/data/*.sqlite-wal
 LCK_Predictor_V28_AUTO_DRAFT/data/*.backup-*
+LCK_Predictor_V28_AUTO_DRAFT/data/*.pre-restore-*
+
+# excecao: o snapshot comprimido do banco principal
+!LCK_Predictor_V28_AUTO_DRAFT/data/lck_data_v1.sqlite.gz
 
 # Runtime Python portatil com site-packages (346 MB)
 LCK_Predictor_V28_AUTO_DRAFT/runtime/
