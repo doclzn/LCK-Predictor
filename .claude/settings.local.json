@@ -1,0 +1,17 @@
+{
+  "effortLevel": "low",
+  "permissions": {
+    "allow": [
+      "Bash(node -e \"require\\('playwright'\\); console.log\\('playwright ok'\\)\")",
+      "Bash(python -c \"import playwright; print\\('py playwright ok'\\)\")",
+      "Bash(curl -s \"http://localhost:8828/static/v28.css?build=V29_MINIMAL_2\")",
+      "Bash(curl -s \"http://localhost:8828/static/v28.js?build=V29_MINIMAL_2\")",
+      "Bash(curl -s \"http://localhost:8828/static/v28.js?build=V29_MINIMAL_2\" -o /tmp/v28_served.js)",
+      "Read(//tmp/**)",
+      "Read(//c/Program Files/Google/Chrome/**)",
+      "Read(//c/Program Files \\\\\\(x86\\\\\\)/Google/**)",
+      "Read(//c//**)",
+      "Bash('/c/Program Files/Google/Chrome/Application/chrome.exe' --headless=new --disable-gpu --no-sandbox --window-size=1600,1100 --virtual-time-budget=8000 --run-all-compositor-stages-before-draw --screenshot=C:/Users/pc/AppData/Local/Temp/claude/c--Users-pc-OneDrive-Desktop-LCK-Predictor-V28-AUTO-DRAFT--1-/8943e8d2-8926-4a5c-976b-a8d9f96372a8/scratchpad/home_v30.png http://127.0.0.1:8828/)"
+    ]
+  }
+}

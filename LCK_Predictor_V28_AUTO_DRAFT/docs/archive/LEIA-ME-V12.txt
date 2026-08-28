@@ -1,0 +1,30 @@
+LCK PREDICTOR V12 — PRODUCT REBUILD
+
+Para abrir:
+    ABRIR_LCK_PREDICTOR.bat
+
+Navegação:
+    Home
+    Matches
+    Draft Lab
+    Explore
+    Model
+
+Mudanças principais:
+- frontend reconstruído;
+- partida pré/live/pós na mesma página;
+- Draft Lab funcional na nova interface;
+- Player Explorer;
+- Champion Explorer;
+- Team Explorer;
+- Model/Trust simplificado;
+- Riot live integrado à Match Page;
+- Prediction Journal e backend V8–V11 preservados;
+- runtime portátil V10.1 preservado.
+
+Histórico atual:
+    LCK 2025–2026 (375 séries)
+Ainda não é o arquivo all-time.
+
+Review:
+    REVIEW_V12_PRODUCT_REBUILD.md

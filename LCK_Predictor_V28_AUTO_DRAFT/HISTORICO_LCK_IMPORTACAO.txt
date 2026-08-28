@@ -1,0 +1,25 @@
+IMPORTAÇÃO DE HISTÓRICO LCK — V13
+
+A V13 adiciona um pipeline para transformar CSVs históricos no arquivo interno
+do aplicativo sem misturar automaticamente dados antigos no modelo atual.
+
+1. Obtenha os arquivos históricos de uma fonte que você tenha direito de usar.
+2. Coloque os CSVs em uma pasta.
+3. Abra o LCK Predictor ao menos uma vez para criar o runtime portátil.
+4. Execute IMPORTAR_HISTORICO_LCK.bat.
+5. Informe a pasta.
+
+O importador:
+- filtra apenas LCK;
+- identifica team rows e player rows;
+- normaliza roles;
+- cria game records;
+- reconstrói séries;
+- salva players/champions/stats;
+- grava um manifest de cobertura por ano;
+- mantém tudo em tabelas lck_alltime_* separadas.
+
+IMPORTANTE:
+dados históricos importados servem primeiro para Explore/History/H2H.
+Eles NÃO entram automaticamente no modelo de previsão de 2026. Isso evita
+misturar eras, patches, rosters e formatos sem validação temporal.

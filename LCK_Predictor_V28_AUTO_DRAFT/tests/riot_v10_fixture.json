@@ -1,0 +1,352 @@
+{
+  "event": {
+    "data": {
+      "event": {
+        "id": "123",
+        "state": "inProgress",
+        "league": {
+          "name": "LCK"
+        },
+        "streams": [
+          {
+            "provider": "twitch",
+            "parameter": "lck",
+            "locale": "en-US"
+          }
+        ],
+        "match": {
+          "teams": [
+            {
+              "id": "1",
+              "name": "Hanwha Life Esports",
+              "code": "HLE",
+              "result": {
+                "gameWins": 1
+              }
+            },
+            {
+              "id": "2",
+              "name": "Dplus KIA",
+              "code": "DK",
+              "result": {
+                "gameWins": 0
+              }
+            }
+          ],
+          "strategy": {
+            "type": "bestOf",
+            "count": 3
+          },
+          "games": [
+            {
+              "id": "456",
+              "number": 2,
+              "state": "inProgress"
+            }
+          ]
+        }
+      }
+    }
+  },
+  "window": {
+    "gameMetadata": {
+      "patchVersion": "16.16.805.442",
+      "blueTeamMetadata": {
+        "teamName": "Hanwha Life Esports",
+        "participantMetadata": [
+          {
+            "participantId": 1,
+            "summonerName": "Zeus",
+            "championId": "Camille",
+            "role": "top"
+          },
+          {
+            "participantId": 2,
+            "summonerName": "Kanavi",
+            "championId": "LeeSin",
+            "role": "jungle"
+          },
+          {
+            "participantId": 3,
+            "summonerName": "Zeka",
+            "championId": "Ryze",
+            "role": "mid"
+          },
+          {
+            "participantId": 4,
+            "summonerName": "Gumayusi",
+            "championId": "Ziggs",
+            "role": "bottom"
+          },
+          {
+            "participantId": 5,
+            "summonerName": "Delight",
+            "championId": "Alistar",
+            "role": "support"
+          }
+        ]
+      },
+      "redTeamMetadata": {
+        "teamName": "Dplus KIA",
+        "participantMetadata": [
+          {
+            "participantId": 6,
+            "summonerName": "Siwoo",
+            "championId": "Olaf",
+            "role": "top"
+          },
+          {
+            "participantId": 7,
+            "summonerName": "Lucid",
+            "championId": "JarvanIV",
+            "role": "jungle"
+          },
+          {
+            "participantId": 8,
+            "summonerName": "ShowMaker",
+            "championId": "TwistedFate",
+            "role": "mid"
+          },
+          {
+            "participantId": 9,
+            "summonerName": "Smash",
+            "championId": "Yunara",
+            "role": "bottom"
+          },
+          {
+            "participantId": 10,
+            "summonerName": "Career",
+            "championId": "Lulu",
+            "role": "support"
+          }
+        ]
+      }
+    },
+    "frames": [
+      {
+        "rfc460Timestamp": "2026-08-20T08:50:00Z",
+        "gameTime": 1200,
+        "blueTeam": {
+          "totalGold": 40000,
+          "totalKills": 10,
+          "towers": 3,
+          "dragons": [
+            "ocean"
+          ],
+          "barons": 0,
+          "inhibitors": 0,
+          "participants": [
+            {
+              "participantId": 1,
+              "level": 12,
+              "kills": 1,
+              "deaths": 1,
+              "assists": 3,
+              "creepScore": 150,
+              "totalGold": 8000
+            },
+            {
+              "participantId": 2,
+              "level": 12,
+              "kills": 1,
+              "deaths": 1,
+              "assists": 3,
+              "creepScore": 150,
+              "totalGold": 8000
+            },
+            {
+              "participantId": 3,
+              "level": 12,
+              "kills": 1,
+              "deaths": 1,
+              "assists": 3,
+              "creepScore": 150,
+              "totalGold": 8000
+            },
+            {
+              "participantId": 4,
+              "level": 12,
+              "kills": 1,
+              "deaths": 1,
+              "assists": 3,
+              "creepScore": 150,
+              "totalGold": 8000
+            },
+            {
+              "participantId": 5,
+              "level": 12,
+              "kills": 1,
+              "deaths": 1,
+              "assists": 3,
+              "creepScore": 150,
+              "totalGold": 8000
+            }
+          ]
+        },
+        "redTeam": {
+          "totalGold": 39000,
+          "totalKills": 8,
+          "towers": 2,
+          "dragons": [],
+          "barons": 0,
+          "inhibitors": 0,
+          "participants": [
+            {
+              "participantId": 6,
+              "level": 12,
+              "kills": 1,
+              "deaths": 1,
+              "assists": 2,
+              "creepScore": 145,
+              "totalGold": 7800
+            },
+            {
+              "participantId": 7,
+              "level": 12,
+              "kills": 1,
+              "deaths": 1,
+              "assists": 2,
+              "creepScore": 145,
+              "totalGold": 7800
+            },
+            {
+              "participantId": 8,
+              "level": 12,
+              "kills": 1,
+              "deaths": 1,
+              "assists": 2,
+              "creepScore": 145,
+              "totalGold": 7800
+            },
+            {
+              "participantId": 9,
+              "level": 12,
+              "kills": 1,
+              "deaths": 1,
+              "assists": 2,
+              "creepScore": 145,
+              "totalGold": 7800
+            },
+            {
+              "participantId": 10,
+              "level": 12,
+              "kills": 1,
+              "deaths": 1,
+              "assists": 2,
+              "creepScore": 145,
+              "totalGold": 7800
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "details": {
+    "frames": [
+      {
+        "participants": [
+          {
+            "participantId": 1,
+            "currentHealth": 1000,
+            "maxHealth": 1500,
+            "items": [
+              {
+                "itemID": 3006
+              }
+            ]
+          },
+          {
+            "participantId": 2,
+            "currentHealth": 1000,
+            "maxHealth": 1500,
+            "items": [
+              {
+                "itemID": 3006
+              }
+            ]
+          },
+          {
+            "participantId": 3,
+            "currentHealth": 1000,
+            "maxHealth": 1500,
+            "items": [
+              {
+                "itemID": 3006
+              }
+            ]
+          },
+          {
+            "participantId": 4,
+            "currentHealth": 1000,
+            "maxHealth": 1500,
+            "items": [
+              {
+                "itemID": 3006
+              }
+            ]
+          },
+          {
+            "participantId": 5,
+            "currentHealth": 1000,
+            "maxHealth": 1500,
+            "items": [
+              {
+                "itemID": 3006
+              }
+            ]
+          },
+          {
+            "participantId": 6,
+            "currentHealth": 1000,
+            "maxHealth": 1500,
+            "items": [
+              {
+                "itemID": 3006
+              }
+            ]
+          },
+          {
+            "participantId": 7,
+            "currentHealth": 1000,
+            "maxHealth": 1500,
+            "items": [
+              {
+                "itemID": 3006
+              }
+            ]
+          },
+          {
+            "participantId": 8,
+            "currentHealth": 1000,
+            "maxHealth": 1500,
+            "items": [
+              {
+                "itemID": 3006
+              }
+            ]
+          },
+          {
+            "participantId": 9,
+            "currentHealth": 1000,
+            "maxHealth": 1500,
+            "items": [
+              {
+                "itemID": 3006
+              }
+            ]
+          },
+          {
+            "participantId": 10,
+            "currentHealth": 1000,
+            "maxHealth": 1500,
+            "items": [
+              {
+                "itemID": 3006
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

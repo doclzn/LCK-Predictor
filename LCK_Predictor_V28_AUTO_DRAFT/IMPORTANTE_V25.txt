@@ -1,0 +1,6 @@
+V25 USA A PORTA 8825.
+
+Isto e proposital: versoes anteriores usavam 8765 e podiam continuar abertas, fazendo o navegador mostrar uma interface antiga.
+
+Ao abrir V25, confira no topo: V25 • PORTA 8825 • NOVA INTERFACE.
+Se essa faixa nao estiver visivel, voce nao esta na V25.

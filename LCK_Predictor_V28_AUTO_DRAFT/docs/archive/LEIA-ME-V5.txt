@@ -1,0 +1,19 @@
+LCK PREDICTOR V5 — DRAFT INTELLIGENCE
+
+Abra: ABRIR_LCK_PREDICTOR.bat
+
+Nova aba: Draft
+
+A V5:
+- permite selecionar campeão por role para DK x HLE;
+- mostra player×champion sample, WR e GD@15;
+- mostra meta LCK 2026 local por campeão;
+- mostra matchup/counter histórico como evidência;
+- calcula sinergia histórica da composição;
+- recalcula probabilidade do GAME;
+- separa probabilidade pré-SÉRIE e probabilidade do GAME;
+- calcula qualidade da evidência em vez de chamar isso de certeza;
+- sinaliza campeão incompatível com Fearless quando informado como já usado;
+- inclui os 3 passes de review dentro do próprio app.
+
+A primeira execução do launcher continua baixando o runtime portátil oficial do Python.org para a pasta local, sem instalar Python no Windows.

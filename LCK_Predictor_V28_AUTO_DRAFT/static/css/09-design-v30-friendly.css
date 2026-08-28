@@ -1,0 +1,74 @@
+/* Sistema de design ATUAL: botões em pílula, hover/press, correção de sobreposição de ícones */
+/* ==========================================================================
+   V30 — FRIENDLY POLISH
+   Tipografia real (Inter via Google Fonts), correção de sobreposição de
+   ícones de time, botões em pílula com estado de hover/press, cantos mais
+   suaves e micro-interações discretas (lift on hover) — linguagem visual
+   inspirada em Uber / Google Maps / WhatsApp / Instagram.
+   ========================================================================== */
+html,body{font-family:"Inter",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+:root{--r-sm:10px;--r-md:14px;--r-lg:20px;--r-xl:26px;--ease:cubic-bezier(.2,.7,.3,1)}
+:root{--accent:#3d7dfd;--accent2:#6fa1ff}
+:root[data-theme="light"]{--accent:#2f68e0;--accent2:#3d7dfd}
+
+/* --- Fix: ícone de time sobrepondo o nome nos rankings --- */
+.mini-ranking button{grid-template-columns:20px 50px 1fr auto;gap:10px}
+.mini-ranking .team-mark.small{margin-right:0}
+.match-teams>div{gap:10px}
+.match-teams .team-mark{margin-right:0}
+.roster-grid,.specialists{row-gap:10px}
+
+/* --- Superfícies: cantos generosos + sombra suave em camadas --- */
+.panel,.hero-match,.feature-card,.empty-panel,.trust-strip,.match-identity,
+.entity-card,.champ-card,.team-card,.game-card,.explain-box,.live-callout,
+.schedule-status-v23,.match-center-panel,.auto-draft-v28{border-radius:var(--r-lg)}
+.hero-match{border-radius:var(--r-xl)}
+.stat-row>div,.draft-lines>div,.why-grid>div,.prediction-compare>div,.score-outcomes>div,
+.patch-strip>div,.model-layer-grid>div,.forecast-ribbon>div,.live-team-box,.strategy-context-card,
+.draft-lock-count,.auto-draft-picks-v28>div,.auto-draft-model-v28,.live-draft-side-v28>div{border-radius:var(--r-md)}
+.team-mark{border-radius:18px}
+.team-mark.small{border-radius:13px}
+
+/* --- Botões: pílula, peso visual claro, feedback ao toque --- */
+button{transition:transform .15s var(--ease),box-shadow .15s var(--ease),background-color .15s var(--ease),border-color .15s var(--ease),opacity .15s var(--ease)}
+.hero-match>button,.draft-launcher button,.legacy-transition button,.link-panel button,
+.live-callout button,.empty-panel button,.strategy-controls-v14>button,.joint-controls-v17>button,
+.series-controls-v18>button,.tree-controls-v15>button,.flex-controls-v15>button,.decision-controls-v13 button,
+.draft-config-v12 button,.schedule-status-v23 button,.strategy-tabs-v14 button,
+.decision-row-v13>button,.strategy-row-v14>button,.ban-row-v14>button,
+.tree-rank-v15 button,.series-rank-v18 button,.coach-fab{border-radius:999px!important;font-weight:700;letter-spacing:-.1px}
+.icon-btn,.ghost-btn,.soft-btn,.back-link{border-radius:999px}
+.hero-match>button:hover,.draft-launcher button:hover,.link-panel button:hover,
+.quick-action:hover,.icon-btn:hover,.ghost-btn:hover,.soft-btn:hover,
+.schedule-status-v23 button:hover{transform:translateY(-1px)}
+.hero-match>button:active,.draft-launcher button:active,.link-panel button:active,
+.schedule-status-v23 button:active{transform:translateY(0) scale(.98)}
+.primary-nav button{border-radius:999px;transition:background-color .15s var(--ease),color .15s var(--ease)}
+.tabs button{border-radius:999px}
+
+/* --- Cards e linhas: leve elevação no hover, como listas de apps nativos --- */
+.match-row,.entity-card,.champ-card,.team-card,.mini-ranking button,.data-table button,
+.tree-card-v15,.series-card-v18,.flex-assignment-grid-v15>article{transition:background-color .15s var(--ease),transform .15s var(--ease),box-shadow .15s var(--ease)}
+.entity-card:hover,.champ-card:hover,.team-card:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+.hero-match{transition:transform .18s var(--ease),box-shadow .18s var(--ease)}
+.hero-match:hover{transform:translateY(-2px)}
+
+/* --- Nav lateral: marca e item ativo mais amigáveis --- */
+.product-mark .mark{border-radius:12px;box-shadow:0 6px 16px color-mix(in srgb,var(--accent) 35%,transparent)}
+.primary-nav button.active{background:color-mix(in srgb,var(--accent) 14%,transparent);color:var(--accent)}
+.primary-nav button:hover:not(.active){background:var(--surface2)}
+
+/* --- Topbar: menos "debug", mais produto --- */
+.version-proof{opacity:.55;font-weight:600}
+.app-topbar{border-bottom-color:transparent;box-shadow:0 1px 0 var(--line)}
+
+/* --- Hero: leve refinamento de contraste do CTA --- */
+.hero-match>button{background:var(--accent);color:#fff;box-shadow:0 8px 20px color-mix(in srgb,var(--accent) 35%,transparent)}
+:root[data-theme="light"] .hero-match>button{color:#fff}
+
+/* --- Toast mais amigável --- */
+.toast{border-radius:999px;padding:11px 16px;font-weight:600}
+
+/* --- Foco visível para acessibilidade, sem quebrar o visual limpo --- */
+button:focus-visible,select:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+

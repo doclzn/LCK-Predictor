@@ -1,0 +1,38 @@
+{
+  "policy_id": "prospective_feature_gate_v21",
+  "status": "PRE_REGISTERED",
+  "reference_candidate": "core",
+  "minimum_games": 100,
+  "minimum_series": 40,
+  "capture_status": "VALID_EARLY",
+  "max_capture_game_time_seconds": 300,
+  "primary_metrics": [
+    "log_loss",
+    "brier"
+  ],
+  "practical_thresholds": {
+    "delta_log_loss_max": -0.005,
+    "delta_brier_max": -0.002
+  },
+  "uncertainty": {
+    "cluster_unit": "series/event",
+    "bootstrap_reps": 2000,
+    "confidence": 0.95,
+    "require_upper_ci_below_or_equal_zero_for": [
+      "log_loss_delta",
+      "brier_delta"
+    ]
+  },
+  "calibration": {
+    "metric": "ECE",
+    "candidate_may_exceed_core_by_at_most": 0.01
+  },
+  "decision_states": {
+    "COLLECTING": "minimum sample not reached",
+    "ELIGIBLE_FOR_REVIEW": "all preregistered gates passed; not auto-promoted",
+    "REJECTED_PROSPECTIVE": "worse on both primary metrics after minimum sample with uncertainty supporting harm",
+    "INCONCLUSIVE_CONTINUE": "minimum sample reached but strict promotion/rejection criteria not met"
+  },
+  "anti_retuning": "No candidate model, feature list, coefficient, imputer, scaler, C or gate threshold may change before the prospective review. A new specification requires a new experiment ID and new future epoch.",
+  "policy_hash": "dd380d227b049ae8033a86d6e17796d3ba73ed79e038fde684003c26573a677f"
+}

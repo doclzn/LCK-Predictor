@@ -1,0 +1,29 @@
+LCK PREDICTOR V24 — QA REVIEW
+
+Esta versão corrige problemas básicos de qualidade encontrados na V23.
+
+PRINCIPAIS CORREÇÕES
+- fontes realmente maiores em toda a interface;
+- nenhuma fonte explícita abaixo de 14 px;
+- botão Aa no topo: Grande / Maior / Máxima;
+- uma única máquina de estados para upcoming/live/completed/pending;
+- cache passado não pode aparecer como ao vivo ou futuro;
+- resultados de 20/08 incluídos na build;
+- datas YYYY-MM-DD não voltam um dia por causa do fuso;
+- regressões históricas usam Elo congelado da época;
+- governança científica separada da integridade da interface;
+- suite de QA V24.
+
+ABRIR
+1. Extraia em uma PASTA NOVA.
+2. Execute ABRIR_LCK_PREDICTOR.bat.
+3. Se o texto ainda parecer pequeno, clique em Aa no topo e escolha Maior/Máxima.
+
+VALIDAR A BUILD
+- REVISAR_V24.bat: roda os testes.
+- VERIFICAR_RELEASE_V24.bat: verifica SHA-256 dos arquivos da release.
+
+RELATÓRIOS
+- REVIEW_V24_FULL_QA.md
+- QA_REPORT_V24.json
+- RELEASE_MANIFEST_V24.json

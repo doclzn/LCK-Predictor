@@ -1,0 +1,63 @@
+LCK PREDICTOR V7 — PATCH INTELLIGENCE
+=====================================
+
+Objective:
+Add patch-by-patch analysis without creating data leakage or pretending that patch win rates are causal.
+
+Historical detailed LCK patch coverage:
+15.01, 15.02, 15.03, 15.06, 15.07, 15.08, 15.09, 15.10, 15.11, 15.14, 15.15, 15.16, 15.17, 16.01, 16.02, 16.03, 16.06, 16.07, 16.08, 16.09, 16.10, 16.11
+
+PASS 1
+Feature tested: exact-patch champion×role performance, computed only from games BEFORE the prediction.
+Accuracy: 0.6963
+Log Loss: 0.5940
+Brier: 0.2041
+AUC: 0.7371
+
+PASS 2
+Families tested:
+
+patch_meta + patch_mastery: accuracy=0.6905, logloss=0.5921, brier=0.2033, auc=0.7393
+patch_meta + team_patch: accuracy=0.6905, logloss=0.5910, brier=0.2031, auc=0.7414
+all_patch_signals: accuracy=0.6905, logloss=0.5902, brier=0.2027, auc=0.7427
+
+PASS 3
+Chronological 2025 tuning selected:
+champion-patch prior strength = 6
+player×champion×patch prior strength = 16
+C = 0.03
+
+Final untouched 2026:
+Accuracy 0.6905
+Log Loss 0.5907
+Brier 0.2030
+AUC 0.7413
+
+V6 reference:
+Accuracy 0.6905
+Log Loss 0.5928
+Brier 0.2035
+AUC 0.7392
+
+DECISION:
+PATCH-AWARE MODEL PROMOTED.
+
+Rules:
+- Exact-patch statistics only use earlier games from the same patch.
+- Future games from the patch never inform an earlier prediction.
+- Patch-specific player samples are heavily shrunk because they are sparse.
+- The UI always shows patch analytics even when a patch feature does not earn predictive weight.
+- Last externally verified LCK patch in this build: v16.15 on 2026-08-06.
+- Upcoming DK vs HLE tournament patch is NOT hard-coded until explicitly observed.
+
+EXECUTION REVIEW
+----------------
+A review found that the promoted patch model had initially been stored/validated but not yet wired into the live central score.
+This was corrected.
+
+Runtime rule:
+- selected patch + exact local patch evidence -> V7 patch-aware score;
+- new/unconfirmed patch with no exact local evidence -> automatic V6 fallback;
+- UI explicitly labels which mode is active.
+
+This prevents a new patch from inheriting fake certainty from an older patch.

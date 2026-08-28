@@ -1,0 +1,104 @@
+/* ==========================================================================
+   V36 — MENU HORIZONTAL NO TOPO + LAYOUT MAIS PLANO (INSPIRADO NO LOLESPORTS)
+   O lolesports usa uma única barra horizontal fixa no topo (logo + navegação
+   + ações) e sessões de conteúdo que se apoiam em espaçamento/divisórias
+   finas, não em cartões com borda+sombra empilhados. Este arquivo:
+   1) converte a antiga sidebar vertical (.nav-shell) em uma barra horizontal;
+   2) reduz o efeito de "caixa" de painéis/cards, uniformizando a paleta.
+   ========================================================================== */
+
+/* --- Shell: coluna única, barra no topo + conteúdo abaixo --- */
+.app-shell{display:flex;flex-direction:column;min-height:100vh}
+
+/* --- Barra de navegação horizontal --- */
+.nav-shell{
+  position:sticky;top:0;left:auto;height:auto;min-height:0;width:100%;
+  display:flex;flex-direction:row;flex-wrap:nowrap;align-items:center;justify-content:flex-start;gap:4px;
+  padding:0 20px;
+  border-right:0;
+  border-bottom:1px solid color-mix(in srgb,var(--line) 40%,var(--accent) 25%);
+  background:linear-gradient(90deg,color-mix(in srgb,var(--surface3) 82%,var(--accent) 18%),color-mix(in srgb,var(--surface3) 88%,var(--data) 12%));
+  backdrop-filter:none;
+  z-index:30;
+}
+.nav-shell .product-mark{padding:6px 4px;margin-right:14px;flex:0 0 auto}
+.nav-shell .product-mark>span:last-child{display:flex}
+
+.primary-nav{margin-top:0;flex:0 0 auto;flex-direction:row;flex-wrap:nowrap;justify-content:flex-start;align-items:stretch;gap:0}
+.primary-nav button{
+  border-radius:0;padding:0 10px;height:38px;
+  justify-content:center;position:relative;flex:0 0 auto;
+}
+.primary-nav button span{display:inline}
+.primary-nav button:hover{background:transparent;color:var(--text)}
+.primary-nav button.active{background:transparent;box-shadow:none;color:var(--text)}
+.primary-nav button.active::after{
+  content:"";position:absolute;left:10px;right:10px;bottom:0;height:2px;
+  background:var(--accent);border-radius:2px 2px 0 0;
+}
+
+.nav-foot{
+  margin-top:0;border-top:0;padding-top:0;margin-left:auto;
+  display:flex;align-items:center;gap:10px;flex-shrink:0;
+}
+.nav-foot>small{display:none}
+.menu-btn{display:none}
+
+/* --- Botão de tema: fora do cabeçalho, flutuando no canto --- */
+.theme-float{
+  position:fixed;right:18px;bottom:18px;z-index:50;
+  width:38px;height:38px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 8px 22px rgba(0,0,0,.35);
+}
+
+/* --- Sem barra secundária: tudo cabe na barra horizontal única --- */
+.app-topbar{display:none}
+.nav-foot #crumb,.nav-foot #versionProof{display:none}
+
+/* --- Painéis/cards: menos "caixa", mais superfície contínua --- */
+:root{--shadow:none}
+.panel,.hero-match,.trust-strip,.match-center-panel,.recent-panel,.ranking-panel{
+  border:1px solid color-mix(in srgb,var(--line) 55%,transparent);
+  background:color-mix(in srgb,var(--surface) 45%,var(--bg) 55%);
+  box-shadow:none;
+}
+.hero-match{
+  padding:18px 20px;
+  background:linear-gradient(120deg,var(--bg) 45%,color-mix(in srgb,var(--surface2) 88%,var(--accent) 12%) 100%);
+  border-color:color-mix(in srgb,var(--line) 70%,var(--accent) 10%);
+}
+.hero-match.is-live{
+  background:linear-gradient(120deg,color-mix(in srgb,var(--bg) 90%,var(--red) 10%) 45%,color-mix(in srgb,var(--surface2) 88%,var(--accent) 12%) 100%);
+}
+.home-grid{gap:20px;grid-template-columns:minmax(280px,.78fr) minmax(0,1.55fr);align-items:start}
+.home-grid>.panel,.recent-panel{padding:18px}
+
+/* --- Ranking de força passa para a coluna da esquerda (era a da direita) --- */
+.home-grid>section.panel.ranking-panel{order:-1;margin-top:0;align-self:start}
+.trust-strip{background:transparent;border:0;border-top:1px solid var(--line);border-radius:0;padding:12px 0}
+.trust-strip>div{border-right:1px solid var(--line)}
+
+/* --- Linha de partida: aproxima "Favorito" do botão "Ver", em vez de um vão largo --- */
+.match-row,.list-head{grid-template-columns:100px 1.2fr auto 60px}
+.match-row.compact{grid-template-columns:85px 1.2fr auto 55px}
+.match-read{text-align:right}
+.list-head span:nth-child(3){text-align:right}
+
+/* --- Menu mobile: colapsa em dropdown a partir da barra horizontal --- */
+@media(max-width:900px){
+  .nav-shell{padding:0 16px}
+  .primary-nav{
+    position:absolute;top:100%;left:0;right:0;
+    flex-direction:column;gap:0;
+    background:color-mix(in srgb,var(--bg) 97%,transparent);
+    border-bottom:1px solid var(--line);
+    max-height:0;overflow:hidden;
+    transition:max-height .2s ease;
+  }
+  .nav-shell.open .primary-nav{max-height:420px}
+  .primary-nav button{height:auto;padding:13px 20px;justify-content:flex-start}
+  .primary-nav button.active::after{display:none}
+  .primary-nav button.active{background:var(--surface2)}
+  .menu-btn{display:flex;align-items:center;justify-content:center;width:34px;height:34px;border:0;background:none;color:var(--text)}
+}

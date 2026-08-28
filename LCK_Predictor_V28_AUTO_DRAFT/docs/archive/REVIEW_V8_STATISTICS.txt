@@ -1,0 +1,94 @@
+LCK PREDICTOR V8 — STATISTICAL RE-AUDIT
+===========================================
+
+WHY THIS VERSION EXISTS
+-----------------------
+Earlier V6/V7 development compared some hyperparameters / feature families on the 2026 holdout
+before finalizing them. Those metrics were useful exploratory estimates, but not a fully untouched test.
+
+V8 resets the methodology:
+1. ALL feature and hyperparameter selection is performed only with rolling-origin 2025 windows.
+2. 2026 is opened once, after the model is frozen.
+3. Uncertainty is bootstrapped by SERIES, not by pretending each game is independent.
+
+PASS 1 — MODEL-SELECTION AUDIT
+------------------------------
+2025 rolling-origin selected:
+- player×champion Empirical-Bayes prior strength: 32 equivalent games
+- champion-pair synergy prior: Beta(2,2)
+- C: 0.10
+
+Best 2025-CV feature candidate included exact-patch champion meta.
+
+PASS 2 — ONE-TIME 2026 EXTERNAL TEST
+------------------------------------
+Elo-only baseline:
+Accuracy 0.6762
+Log Loss 0.5987
+Brier 0.2061
+AUC 0.7343
+
+V8 base:
+Accuracy 0.6905
+Log Loss 0.5924
+Brier 0.2036
+AUC 0.7388
+
+Patch candidate:
+Accuracy 0.6934
+Log Loss 0.5950
+Brier 0.2049
+AUC 0.7352
+
+DECISION:
+The exact-patch feature was selected inside 2025 but FAILED to beat the base model on the untouched
+2026 external test. Patch remains a rich analytics layer, but production predictive weight = 0.
+
+PASS 3 — UNCERTAINTY / CALIBRATION
+----------------------------------
+V8 calibration slope: 0.9755 (ideal ~1)
+V8 calibration intercept: 0.0027 (ideal ~0)
+10-bin ECE: 0.0323
+
+Series-cluster 95% bootstrap intervals:
+Accuracy: 0.6401 — 0.7449
+Log Loss: 0.5417 — 0.6389
+Brier: 0.1812 — 0.2242
+AUC: 0.6803 — 0.7951
+
+Paired V8 - Elo 95% intervals:
+Accuracy delta: -0.0028 — 0.0342
+Log Loss delta: -0.0135 — 0.0001
+Brier delta: -0.0054 — 0.0001
+AUC delta: -0.0035 — 0.0123
+
+INTERPRETATION
+--------------
+V8 is slightly better than Elo on the point estimates, especially accuracy and probabilistic scores.
+However, the paired bootstrap intervals for the metric improvement touch/cross zero.
+Therefore the added draft features are promising, but the current sample does NOT justify claiming
+a statistically decisive improvement over Elo.
+
+PATCH-BY-PATCH HOLDOUT
+----------------------
+ patch  games  accuracy  log_loss    brier  roc_auc
+ 16.01     51  0.705882  0.603270 0.207375 0.736923
+ 16.02     33  0.606061  0.648721 0.229149 0.639098
+ 16.03     41  0.536585  0.694651 0.250542 0.633333
+ 16.06     21  0.476190  0.779318 0.287042 0.466667
+ 16.07     45  0.711111  0.599648 0.207080 0.703704
+ 16.08     44  0.795455  0.527960 0.171529 0.823158
+ 16.09     45  0.733333  0.522771 0.175723 0.795556
+ 16.10     49  0.795918  0.487448 0.155678 0.840351
+ 16.11     20  0.700000  0.604258 0.210185 0.666667
+
+The wide variation between patches is a warning against over-interpreting patch-specific accuracy
+from small samples. Patch 16.06 performed poorly; 16.08-16.10 performed strongly.
+This is now displayed directly in the app.
+
+PRODUCTION POLICY
+-----------------
+- Central game probability: V8 audited base.
+- Patch analysis: always visible.
+- Patch experimental score: may be shown, predictive weight = 0.
+- Current/future data after this audit should serve as the next genuinely unseen validation window.

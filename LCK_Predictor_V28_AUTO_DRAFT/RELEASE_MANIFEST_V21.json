@@ -1,0 +1,90 @@
+{
+  "release": "LCK Predictor V21 — Model Governance",
+  "built_at": "2026-08-20T23:55:15.557260+00:00",
+  "critical_files": {
+    "server.py": {
+      "sha256": "1ec260be26a3c3067b5e6e91ec8b892c0b78b52a4c3c0a0659122b05f83f9c6f",
+      "bytes": 219760
+    },
+    "riot_feed.py": {
+      "sha256": "9c179eeb7f47a401b7a7ddff14a917def52b322eb48a5a2a3443a3fac07e839a",
+      "bytes": 8248
+    },
+    "static/index.html": {
+      "sha256": "e5cabdeb27bac6fa7f195b518d8a96665b0095da2d56bd0f475db0974b8725fe",
+      "bytes": 2276
+    },
+    "static/v21.js": {
+      "sha256": "ccfcb263cd413ec8fc888fe900f2709ba29a7d310583e2fa9fc3c2f1cc61db43",
+      "bytes": 107696
+    },
+    "static/v21.css": {
+      "sha256": "5c353e9df0b221c00495c66bc8c66c53b1b92392afbf7ee27ce79a473a9e4686",
+      "bytes": 70410
+    },
+    "static/sw.js": {
+      "sha256": "028c9887b39736895e76ae5650e21a8cebd047432b0219645bb514b46c154fcb",
+      "bytes": 624
+    },
+    "static/manifest.webmanifest": {
+      "sha256": "fe5f19cbc3a859cb4ec9913b06413d568ceff7279b802a4c5ca4905065c2e784",
+      "bytes": 484
+    },
+    "scripts/train_live_model_v21.py": {
+      "sha256": "614d588acb9f104b9bb5438e518ea31df7d1a0f5b76816de728d3249d774b570",
+      "bytes": 12322
+    },
+    "scripts/governance_report_v21.py": {
+      "sha256": "2837ed8dccc73094ec7a28154aecb4a01fe290ca7d1bcae2748f464c5d479901",
+      "bytes": 350
+    },
+    "scripts/run_validation_v19.py": {
+      "sha256": "68bb373ba61dbdbb9a03faed76fd625fe5437df019baae9badde617f0d343a35",
+      "bytes": 20714
+    },
+    "scripts/import_lck_history.py": {
+      "sha256": "e47838bc1d23a9dc4b87629bff80bcda4df2e7daf8c7498eff911c80929d1370",
+      "bytes": 10038
+    },
+    "governance/V19_FROZEN_CANDIDATES.json": {
+      "sha256": "c54b0c24efa71a1c87d405371045115122a7511e7a388129cdc9ac8debd1d8a2",
+      "bytes": 8412
+    },
+    "governance/PROMOTION_POLICY_V21.json": {
+      "sha256": "a3a82b851c7f47da05b6873af38514380302c49fb2fdadc8ca621671e12f2fa5",
+      "bytes": 1371
+    },
+    "governance/LIVE_TRAINING_PROTOCOL_V21.json": {
+      "sha256": "5882cd5c9ab75a546310b52c6c4c38c02b75b30be93ed34dd58cbdf36eef9b2d",
+      "bytes": 3047
+    },
+    "governance/GOVERNANCE_LOCK_V21.json": {
+      "sha256": "b8e090b5842a6497e1f658c442cab8f1b4c6a199e516b046c313e195b0372e73",
+      "bytes": 1094
+    },
+    "ABRIR_LCK_PREDICTOR.bat": {
+      "sha256": "555d8cbe9e460cc2026c528dfc88d0488cf0f5c6bc5d9a08b0989f5c94179e3c",
+      "bytes": 2808
+    },
+    "COLETAR_LCK_LIVE.bat": {
+      "sha256": "f4732698d84cfdce41d28efb34c349cf559023701a3b37fccef1390d532ff6fc",
+      "bytes": 975
+    },
+    "VERIFICAR_GOVERNANCA.bat": {
+      "sha256": "1500b39a0af21b2e31e72133ae0244ef076a05905775350d47e7127e870e9771",
+      "bytes": 518
+    },
+    "TREINAR_LIVE_QUANDO_PRONTO.bat": {
+      "sha256": "b25e0ac7f87b108a73dfb12838688e1e0f0a76c82ef809ee63f1a83a4b94af0c",
+      "bytes": 684
+    }
+  },
+  "database": "data/lck_data_v1.sqlite",
+  "database_not_hashed_reason": "SQLite is intentionally mutable: live/prospective observations are appended after release.",
+  "governance_lock": "governance/GOVERNANCE_LOCK_V21.json",
+  "prospective_state_at_release": {
+    "valid_predictions": 0,
+    "live_training_maps": 0,
+    "live_test_runs": 0
+  }
+}

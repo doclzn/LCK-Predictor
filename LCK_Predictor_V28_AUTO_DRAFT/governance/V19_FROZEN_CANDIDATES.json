@@ -1,0 +1,258 @@
+{
+  "artifact": "V19_FROZEN_CANDIDATES",
+  "schema_version": 1,
+  "created_for_release": "V21 Model Governance",
+  "candidates": [
+    {
+      "candidate": "core",
+      "frozen_at": "2026-08-20T21:56:58.919089+00:00",
+      "features": [
+        "elo_diff",
+        "mastery_diff",
+        "synergy_diff"
+      ],
+      "model": {
+        "features": [
+          "elo_diff",
+          "mastery_diff",
+          "synergy_diff"
+        ],
+        "imputer_medians": [
+          -2.624390023466958,
+          -0.00658378366090312,
+          -0.0035943223443223593
+        ],
+        "means": [
+          -2.849622796606713,
+          -0.01788559935781011,
+          -0.0009498797843933354
+        ],
+        "scales": [
+          199.47377576221268,
+          0.20846200065775425,
+          0.05957420768773968
+        ],
+        "coef": [
+          0.7195801624890926,
+          0.1584521317274795,
+          -0.03282254243354023
+        ],
+        "intercept": 0.15737250369985864,
+        "C": 0.1
+      },
+      "status": "FROZEN_AWAITING_PROSPECTIVE",
+      "min_future_games": 100,
+      "min_future_series": 40,
+      "promotion_rule": "After >=100 future maps and >=40 series: candidate must improve both Log Loss and Brier vs frozen core; practical targets ΔLL<=-0.005 and ΔBrier<=-0.002, with no material calibration degradation. Bootstrap uncertainty is reported and no retuning is allowed before gate review.",
+      "retrospective_verdict": "REFERENCE",
+      "definition_hash": "1af022b95ab118be7e79dbfc2e368dc285b400095a1a998649ebcaf740a3ef66"
+    },
+    {
+      "candidate": "core_flex",
+      "frozen_at": "2026-08-20T21:56:58.919089+00:00",
+      "features": [
+        "elo_diff",
+        "mastery_diff",
+        "synergy_diff",
+        "flex_diff"
+      ],
+      "model": {
+        "features": [
+          "elo_diff",
+          "mastery_diff",
+          "synergy_diff",
+          "flex_diff"
+        ],
+        "imputer_medians": [
+          -2.624390023466958,
+          -0.00658378366090312,
+          -0.0035943223443223593,
+          0.0
+        ],
+        "means": [
+          -2.849622796606713,
+          -0.01788559935781011,
+          -0.0009498797843933354,
+          0.0007790631777955583
+        ],
+        "scales": [
+          199.47377576221268,
+          0.20846200065775425,
+          0.05957420768773968,
+          0.18808213665168405
+        ],
+        "coef": [
+          0.7193041594703297,
+          0.16257662732480838,
+          -0.034107819240984674,
+          -0.059897687056720175
+        ],
+        "intercept": 0.15741461838572515,
+        "C": 0.1
+      },
+      "status": "FROZEN_AWAITING_PROSPECTIVE",
+      "min_future_games": 100,
+      "min_future_series": 40,
+      "promotion_rule": "After >=100 future maps and >=40 series: candidate must improve both Log Loss and Brier vs frozen core; practical targets ΔLL<=-0.005 and ΔBrier<=-0.002, with no material calibration degradation. Bootstrap uncertainty is reported and no retuning is allowed before gate review.",
+      "retrospective_verdict": "RETROSPECTIVE_REJECT",
+      "definition_hash": "efc57cdd63186b11c6b2c6ac4dce6a4cf650b1b8845d2aa428b93d690e8b7d2e"
+    },
+    {
+      "candidate": "core_pool_exhaustion",
+      "frozen_at": "2026-08-20T21:56:58.919089+00:00",
+      "features": [
+        "elo_diff",
+        "mastery_diff",
+        "synergy_diff",
+        "pool_exhaustion_adv"
+      ],
+      "model": {
+        "features": [
+          "elo_diff",
+          "mastery_diff",
+          "synergy_diff",
+          "pool_exhaustion_adv"
+        ],
+        "imputer_medians": [
+          -2.624390023466958,
+          -0.00658378366090312,
+          -0.0035943223443223593,
+          0.0
+        ],
+        "means": [
+          -2.849622796606713,
+          -0.01788559935781011,
+          -0.0009498797843933354,
+          0.0029268532500160514
+        ],
+        "scales": [
+          199.47377576221268,
+          0.20846200065775425,
+          0.05957420768773968,
+          0.03901665224795479
+        ],
+        "coef": [
+          0.5531214651784719,
+          0.3744940665562954,
+          -0.036372326178102536,
+          0.22733134249904827
+        ],
+        "intercept": 0.15748452928126852,
+        "C": 0.1
+      },
+      "status": "FROZEN_AWAITING_PROSPECTIVE",
+      "min_future_games": 100,
+      "min_future_series": 40,
+      "promotion_rule": "After >=100 future maps and >=40 series: candidate must improve both Log Loss and Brier vs frozen core; practical targets ΔLL<=-0.005 and ΔBrier<=-0.002, with no material calibration degradation. Bootstrap uncertainty is reported and no retuning is allowed before gate review.",
+      "retrospective_verdict": "INCONCLUSIVE",
+      "definition_hash": "66d12dafea50002cac01eeadb1aa894a292955bd3cf244ca650d48cb2d7a26b4"
+    },
+    {
+      "candidate": "core_pool_flex",
+      "frozen_at": "2026-08-20T21:56:58.919089+00:00",
+      "features": [
+        "elo_diff",
+        "mastery_diff",
+        "synergy_diff",
+        "pool_exhaustion_adv",
+        "flex_diff"
+      ],
+      "model": {
+        "features": [
+          "elo_diff",
+          "mastery_diff",
+          "synergy_diff",
+          "pool_exhaustion_adv",
+          "flex_diff"
+        ],
+        "imputer_medians": [
+          -2.624390023466958,
+          -0.00658378366090312,
+          -0.0035943223443223593,
+          0.0,
+          0.0
+        ],
+        "means": [
+          -2.849622796606713,
+          -0.01788559935781011,
+          -0.0009498797843933354,
+          0.0029268532500160514,
+          0.0007790631777955583
+        ],
+        "scales": [
+          199.47377576221268,
+          0.20846200065775425,
+          0.05957420768773968,
+          0.03901665224795479,
+          0.18808213665168405
+        ],
+        "coef": [
+          0.5521886923421193,
+          0.37945251424346194,
+          -0.03761983275757546,
+          0.2271650039214866,
+          -0.06074027091657932
+        ],
+        "intercept": 0.1575616750777079,
+        "C": 0.1
+      },
+      "status": "FROZEN_AWAITING_PROSPECTIVE",
+      "min_future_games": 100,
+      "min_future_series": 40,
+      "promotion_rule": "After >=100 future maps and >=40 series: candidate must improve both Log Loss and Brier vs frozen core; practical targets ΔLL<=-0.005 and ΔBrier<=-0.002, with no material calibration degradation. Bootstrap uncertainty is reported and no retuning is allowed before gate review.",
+      "retrospective_verdict": "INCONCLUSIVE",
+      "definition_hash": "aaef3a433d8601f6869bafef5f85fdd73f40dc4e5be399183d18d39e5da27f1e"
+    },
+    {
+      "candidate": "core_pool_remaining",
+      "frozen_at": "2026-08-20T21:56:58.919089+00:00",
+      "features": [
+        "elo_diff",
+        "mastery_diff",
+        "synergy_diff",
+        "remaining_pool_diff"
+      ],
+      "model": {
+        "features": [
+          "elo_diff",
+          "mastery_diff",
+          "synergy_diff",
+          "remaining_pool_diff"
+        ],
+        "imputer_medians": [
+          -2.624390023466958,
+          -0.00658378366090312,
+          -0.0035943223443223593,
+          -0.012750181958501527
+        ],
+        "means": [
+          -2.849622796606713,
+          -0.01788559935781011,
+          -0.0009498797843933354,
+          -0.012937313002935333
+        ],
+        "scales": [
+          199.47377576221268,
+          0.20846200065775425,
+          0.05957420768773968,
+          0.1953762734925916
+        ],
+        "coef": [
+          0.5397653709898363,
+          -0.05410701957803278,
+          -0.028694847513941826,
+          0.4125690586735686
+        ],
+        "intercept": 0.15770366563042293,
+        "C": 0.1
+      },
+      "status": "FROZEN_AWAITING_PROSPECTIVE",
+      "min_future_games": 100,
+      "min_future_series": 40,
+      "promotion_rule": "After >=100 future maps and >=40 series: candidate must improve both Log Loss and Brier vs frozen core; practical targets ΔLL<=-0.005 and ΔBrier<=-0.002, with no material calibration degradation. Bootstrap uncertainty is reported and no retuning is allowed before gate review.",
+      "retrospective_verdict": "INCONCLUSIVE",
+      "definition_hash": "96e2211f21e7a042486143b5191efe03a3bde20529502433d9c4b6dab867773c"
+    }
+  ],
+  "rule": "These definitions are immutable during the prospective gate. A DB candidate whose definition hash differs is excluded from capture and logged as a governance violation."
+}

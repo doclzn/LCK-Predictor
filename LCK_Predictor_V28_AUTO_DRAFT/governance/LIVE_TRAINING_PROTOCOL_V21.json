@@ -1,0 +1,110 @@
+{
+  "protocol_id": "live_model_v1_preregistered",
+  "status": "PRE_REGISTERED_NOT_TRAINED",
+  "source_table": "live_training_snapshots_v20",
+  "eligibility_gate": {
+    "min_completed_maps": 120,
+    "min_teams": 8,
+    "required_checkpoint_maps": {
+      "5": 80,
+      "10": 80,
+      "15": 80,
+      "20": 60,
+      "25": 40,
+      "30": 25
+    },
+    "blue_win_rate_range": [
+      0.35,
+      0.65
+    ]
+  },
+  "unit_of_split": "whole game; snapshots from a game never cross splits",
+  "chronological_split": {
+    "train": 0.65,
+    "validation": 0.15,
+    "test": 0.2,
+    "ordering": "first captured_at per game"
+  },
+  "training_rows": "all in-progress compact minute checkpoints; per-game sample weights sum to 1",
+  "evaluation_checkpoints_minutes": [
+    5,
+    10,
+    15,
+    20,
+    25,
+    30
+  ],
+  "primary_evaluation": "macro-average across available canonical checkpoints, equal checkpoint weight",
+  "baseline": "draft_probability_blue carried forward at every checkpoint",
+  "families": {
+    "live_objectives": [
+      "draft_probability_blue",
+      "game_time_seconds",
+      "gold_diff",
+      "kill_diff",
+      "tower_diff",
+      "dragon_diff",
+      "baron_diff",
+      "inhibitor_diff"
+    ],
+    "live_role_distribution": [
+      "draft_probability_blue",
+      "game_time_seconds",
+      "gold_diff",
+      "kill_diff",
+      "tower_diff",
+      "dragon_diff",
+      "baron_diff",
+      "inhibitor_diff",
+      "top_gold_diff",
+      "jng_gold_diff",
+      "mid_gold_diff",
+      "bot_gold_diff",
+      "sup_gold_diff",
+      "lead_breadth"
+    ]
+  },
+  "estimator": "Weighted StandardScaler + L2 logistic regression",
+  "C_grid": [
+    0.01,
+    0.03,
+    0.1,
+    0.3,
+    1.0
+  ],
+  "selection": "choose family+C by validation macro Log Loss, tie-break Brier; test set opened once after selection",
+  "promotion_review_gate": {
+    "must_improve_test_macro_log_loss_vs_draft": true,
+    "must_improve_test_macro_brier_vs_draft": true,
+    "cluster_bootstrap_unit": "game",
+    "bootstrap_reps": 2000,
+    "require_95pct_upper_ci_le_zero_for_both_primary_deltas": true,
+    "max_ece_degradation_vs_draft": 0.02,
+    "checkpoint_sanity": "at least 3 of 5/10/15/20 improve Log Loss when checkpoint has adequate test coverage",
+    "automatic_promotion": false
+  },
+  "forbidden": [
+    "random snapshot-level split",
+    "terminal completed-state snapshots",
+    "feature engineering using final outcome",
+    "retuning after test metrics are viewed under same protocol ID"
+  ],
+  "protocol_hash": "d855837b6e0d4c8ca5402f2f6042d6be974c7b941014f09a544360f234a6f819",
+  "implementation": {
+    "runtime": "portable Python stdlib",
+    "optimizer": "deterministic IRLS/Newton",
+    "intercept_penalty": false,
+    "l2_lambda": "1/C",
+    "max_iterations": 45,
+    "weighting": "each game contributes total training weight 1"
+  },
+  "split_sanity": {
+    "require_both_outcome_classes_in_each_split": true,
+    "minimum_test_checkpoint_maps": {
+      "5": 15,
+      "10": 15,
+      "15": 15,
+      "20": 10
+    }
+  }
+}

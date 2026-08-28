@@ -1,0 +1,475 @@
+{
+  "integrity": {
+    "status": "OK",
+    "ok": true,
+    "checks": [
+      {
+        "path": "governance/V19_FROZEN_CANDIDATES.json",
+        "expected": "c54b0c24efa71a1c87d405371045115122a7511e7a388129cdc9ac8debd1d8a2",
+        "actual": "c54b0c24efa71a1c87d405371045115122a7511e7a388129cdc9ac8debd1d8a2",
+        "ok": true,
+        "critical": true
+      },
+      {
+        "path": "governance/PROMOTION_POLICY_V21.json",
+        "expected": "a3a82b851c7f47da05b6873af38514380302c49fb2fdadc8ca621671e12f2fa5",
+        "actual": "a3a82b851c7f47da05b6873af38514380302c49fb2fdadc8ca621671e12f2fa5",
+        "ok": true,
+        "critical": true
+      },
+      {
+        "path": "governance/LIVE_TRAINING_PROTOCOL_V21.json",
+        "expected": "5882cd5c9ab75a546310b52c6c4c38c02b75b30be93ed34dd58cbdf36eef9b2d",
+        "actual": "5882cd5c9ab75a546310b52c6c4c38c02b75b30be93ed34dd58cbdf36eef9b2d",
+        "ok": true,
+        "critical": true
+      },
+      {
+        "path": "ABRIR_LCK_PREDICTOR.bat",
+        "expected": "555d8cbe9e460cc2026c528dfc88d0488cf0f5c6bc5d9a08b0989f5c94179e3c",
+        "actual": "555d8cbe9e460cc2026c528dfc88d0488cf0f5c6bc5d9a08b0989f5c94179e3c",
+        "ok": true,
+        "critical": true
+      },
+      {
+        "path": "COLETAR_LCK_LIVE.bat",
+        "expected": "f4732698d84cfdce41d28efb34c349cf559023701a3b37fccef1390d532ff6fc",
+        "actual": "f4732698d84cfdce41d28efb34c349cf559023701a3b37fccef1390d532ff6fc",
+        "ok": true,
+        "critical": true
+      },
+      {
+        "path": "TREINAR_LIVE_QUANDO_PRONTO.bat",
+        "expected": "b25e0ac7f87b108a73dfb12838688e1e0f0a76c82ef809ee63f1a83a4b94af0c",
+        "actual": "b25e0ac7f87b108a73dfb12838688e1e0f0a76c82ef809ee63f1a83a4b94af0c",
+        "ok": true,
+        "critical": true
+      },
+      {
+        "path": "VERIFICAR_GOVERNANCA.bat",
+        "expected": "1500b39a0af21b2e31e72133ae0244ef076a05905775350d47e7127e870e9771",
+        "actual": "1500b39a0af21b2e31e72133ae0244ef076a05905775350d47e7127e870e9771",
+        "ok": true,
+        "critical": true
+      },
+      {
+        "path": "governance/GOVERNANCE_LOCK_V21.json",
+        "expected": "b8e090b5842a6497e1f658c442cab8f1b4c6a199e516b046c313e195b0372e73",
+        "actual": "b8e090b5842a6497e1f658c442cab8f1b4c6a199e516b046c313e195b0372e73",
+        "ok": true,
+        "critical": true
+      },
+      {
+        "path": "governance/LIVE_TRAINING_PROTOCOL_V21.json",
+        "expected": "5882cd5c9ab75a546310b52c6c4c38c02b75b30be93ed34dd58cbdf36eef9b2d",
+        "actual": "5882cd5c9ab75a546310b52c6c4c38c02b75b30be93ed34dd58cbdf36eef9b2d",
+        "ok": true,
+        "critical": true
+      },
+      {
+        "path": "governance/PROMOTION_POLICY_V21.json",
+        "expected": "a3a82b851c7f47da05b6873af38514380302c49fb2fdadc8ca621671e12f2fa5",
+        "actual": "a3a82b851c7f47da05b6873af38514380302c49fb2fdadc8ca621671e12f2fa5",
+        "ok": true,
+        "critical": true
+      },
+      {
+        "path": "governance/V19_FROZEN_CANDIDATES.json",
+        "expected": "c54b0c24efa71a1c87d405371045115122a7511e7a388129cdc9ac8debd1d8a2",
+        "actual": "c54b0c24efa71a1c87d405371045115122a7511e7a388129cdc9ac8debd1d8a2",
+        "ok": true,
+        "critical": true
+      },
+      {
+        "path": "riot_feed.py",
+        "expected": "9c179eeb7f47a401b7a7ddff14a917def52b322eb48a5a2a3443a3fac07e839a",
+        "actual": "9c179eeb7f47a401b7a7ddff14a917def52b322eb48a5a2a3443a3fac07e839a",
+        "ok": true,
+        "critical": true
+      },
+      {
+        "path": "scripts/governance_report_v21.py",
+        "expected": "2837ed8dccc73094ec7a28154aecb4a01fe290ca7d1bcae2748f464c5d479901",
+        "actual": "2837ed8dccc73094ec7a28154aecb4a01fe290ca7d1bcae2748f464c5d479901",
+        "ok": true,
+        "critical": true
+      },
+      {
+        "path": "scripts/import_lck_history.py",
+        "expected": "e47838bc1d23a9dc4b87629bff80bcda4df2e7daf8c7498eff911c80929d1370",
+        "actual": "e47838bc1d23a9dc4b87629bff80bcda4df2e7daf8c7498eff911c80929d1370",
+        "ok": true,
+        "critical": true
+      },
+      {
+        "path": "scripts/run_validation_v19.py",
+        "expected": "68bb373ba61dbdbb9a03faed76fd625fe5437df019baae9badde617f0d343a35",
+        "actual": "68bb373ba61dbdbb9a03faed76fd625fe5437df019baae9badde617f0d343a35",
+        "ok": true,
+        "critical": true
+      },
+      {
+        "path": "scripts/train_live_model_v21.py",
+        "expected": "614d588acb9f104b9bb5438e518ea31df7d1a0f5b76816de728d3249d774b570",
+        "actual": "614d588acb9f104b9bb5438e518ea31df7d1a0f5b76816de728d3249d774b570",
+        "ok": true,
+        "critical": true
+      },
+      {
+        "path": "server.py",
+        "expected": "1ec260be26a3c3067b5e6e91ec8b892c0b78b52a4c3c0a0659122b05f83f9c6f",
+        "actual": "1ec260be26a3c3067b5e6e91ec8b892c0b78b52a4c3c0a0659122b05f83f9c6f",
+        "ok": true,
+        "critical": true
+      },
+      {
+        "path": "static/index.html",
+        "expected": "e5cabdeb27bac6fa7f195b518d8a96665b0095da2d56bd0f475db0974b8725fe",
+        "actual": "e5cabdeb27bac6fa7f195b518d8a96665b0095da2d56bd0f475db0974b8725fe",
+        "ok": true,
+        "critical": true
+      },
+      {
+        "path": "static/manifest.webmanifest",
+        "expected": "fe5f19cbc3a859cb4ec9913b06413d568ceff7279b802a4c5ca4905065c2e784",
+        "actual": "fe5f19cbc3a859cb4ec9913b06413d568ceff7279b802a4c5ca4905065c2e784",
+        "ok": true,
+        "critical": true
+      },
+      {
+        "path": "static/sw.js",
+        "expected": "028c9887b39736895e76ae5650e21a8cebd047432b0219645bb514b46c154fcb",
+        "actual": "028c9887b39736895e76ae5650e21a8cebd047432b0219645bb514b46c154fcb",
+        "ok": true,
+        "critical": true
+      },
+      {
+        "path": "static/v21.css",
+        "expected": "5c353e9df0b221c00495c66bc8c66c53b1b92392afbf7ee27ce79a473a9e4686",
+        "actual": "5c353e9df0b221c00495c66bc8c66c53b1b92392afbf7ee27ce79a473a9e4686",
+        "ok": true,
+        "critical": true
+      },
+      {
+        "path": "static/v21.js",
+        "expected": "ccfcb263cd413ec8fc888fe900f2709ba29a7d310583e2fa9fc3c2f1cc61db43",
+        "actual": "ccfcb263cd413ec8fc888fe900f2709ba29a7d310583e2fa9fc3c2f1cc61db43",
+        "ok": true,
+        "critical": true
+      }
+    ],
+    "lock_created_at": "2026-08-20T23:45:37.961125+00:00",
+    "release": "V21 Model Governance"
+  },
+  "experiments": [
+    {
+      "experiment_id": "v19:core:2026-08-20T21:56:58.919089+00:00",
+      "layer": "post-draft feature candidate",
+      "candidate": "core",
+      "created_at": "2026-08-20T23:45:37.979942+00:00",
+      "epoch_start": "2026-08-20T21:56:58.919089+00:00",
+      "status": "FROZEN_PROSPECTIVE",
+      "definition_hash": "1af022b95ab118be7e79dbfc2e368dc285b400095a1a998649ebcaf740a3ef66",
+      "config_hash": null,
+      "source_version": "V19",
+      "retrospective_verdict": "REFERENCE",
+      "gate_policy_hash": "dd380d227b049ae8033a86d6e17796d3ba73ed79e038fde684003c26573a677f",
+      "note": "Imported from V19 frozen candidate; immutable for current prospective epoch."
+    },
+    {
+      "experiment_id": "v19:core_flex:2026-08-20T21:56:58.919089+00:00",
+      "layer": "post-draft feature candidate",
+      "candidate": "core_flex",
+      "created_at": "2026-08-20T23:45:37.979942+00:00",
+      "epoch_start": "2026-08-20T21:56:58.919089+00:00",
+      "status": "FROZEN_PROSPECTIVE",
+      "definition_hash": "efc57cdd63186b11c6b2c6ac4dce6a4cf650b1b8845d2aa428b93d690e8b7d2e",
+      "config_hash": null,
+      "source_version": "V19",
+      "retrospective_verdict": "RETROSPECTIVE_REJECT",
+      "gate_policy_hash": "dd380d227b049ae8033a86d6e17796d3ba73ed79e038fde684003c26573a677f",
+      "note": "Imported from V19 frozen candidate; immutable for current prospective epoch."
+    },
+    {
+      "experiment_id": "v19:core_pool_exhaustion:2026-08-20T21:56:58.919089+00:00",
+      "layer": "post-draft feature candidate",
+      "candidate": "core_pool_exhaustion",
+      "created_at": "2026-08-20T23:45:37.979942+00:00",
+      "epoch_start": "2026-08-20T21:56:58.919089+00:00",
+      "status": "FROZEN_PROSPECTIVE",
+      "definition_hash": "66d12dafea50002cac01eeadb1aa894a292955bd3cf244ca650d48cb2d7a26b4",
+      "config_hash": null,
+      "source_version": "V19",
+      "retrospective_verdict": "INCONCLUSIVE",
+      "gate_policy_hash": "dd380d227b049ae8033a86d6e17796d3ba73ed79e038fde684003c26573a677f",
+      "note": "Imported from V19 frozen candidate; immutable for current prospective epoch."
+    },
+    {
+      "experiment_id": "v19:core_pool_flex:2026-08-20T21:56:58.919089+00:00",
+      "layer": "post-draft feature candidate",
+      "candidate": "core_pool_flex",
+      "created_at": "2026-08-20T23:45:37.979942+00:00",
+      "epoch_start": "2026-08-20T21:56:58.919089+00:00",
+      "status": "FROZEN_PROSPECTIVE",
+      "definition_hash": "aaef3a433d8601f6869bafef5f85fdd73f40dc4e5be399183d18d39e5da27f1e",
+      "config_hash": null,
+      "source_version": "V19",
+      "retrospective_verdict": "INCONCLUSIVE",
+      "gate_policy_hash": "dd380d227b049ae8033a86d6e17796d3ba73ed79e038fde684003c26573a677f",
+      "note": "Imported from V19 frozen candidate; immutable for current prospective epoch."
+    },
+    {
+      "experiment_id": "v19:core_pool_remaining:2026-08-20T21:56:58.919089+00:00",
+      "layer": "post-draft feature candidate",
+      "candidate": "core_pool_remaining",
+      "created_at": "2026-08-20T23:45:37.979942+00:00",
+      "epoch_start": "2026-08-20T21:56:58.919089+00:00",
+      "status": "FROZEN_PROSPECTIVE",
+      "definition_hash": "96e2211f21e7a042486143b5191efe03a3bde20529502433d9c4b6dab867773c",
+      "config_hash": null,
+      "source_version": "V19",
+      "retrospective_verdict": "INCONCLUSIVE",
+      "gate_policy_hash": "dd380d227b049ae8033a86d6e17796d3ba73ed79e038fde684003c26573a677f",
+      "note": "Imported from V19 frozen candidate; immutable for current prospective epoch."
+    }
+  ],
+  "promotion_policy": {
+    "policy_id": "prospective_feature_gate_v21",
+    "status": "PRE_REGISTERED",
+    "reference_candidate": "core",
+    "minimum_games": 100,
+    "minimum_series": 40,
+    "capture_status": "VALID_EARLY",
+    "max_capture_game_time_seconds": 300,
+    "primary_metrics": [
+      "log_loss",
+      "brier"
+    ],
+    "practical_thresholds": {
+      "delta_log_loss_max": -0.005,
+      "delta_brier_max": -0.002
+    },
+    "uncertainty": {
+      "cluster_unit": "series/event",
+      "bootstrap_reps": 2000,
+      "confidence": 0.95,
+      "require_upper_ci_below_or_equal_zero_for": [
+        "log_loss_delta",
+        "brier_delta"
+      ]
+    },
+    "calibration": {
+      "metric": "ECE",
+      "candidate_may_exceed_core_by_at_most": 0.01
+    },
+    "decision_states": {
+      "COLLECTING": "minimum sample not reached",
+      "ELIGIBLE_FOR_REVIEW": "all preregistered gates passed; not auto-promoted",
+      "REJECTED_PROSPECTIVE": "worse on both primary metrics after minimum sample with uncertainty supporting harm",
+      "INCONCLUSIVE_CONTINUE": "minimum sample reached but strict promotion/rejection criteria not met"
+    },
+    "anti_retuning": "No candidate model, feature list, coefficient, imputer, scaler, C or gate threshold may change before the prospective review. A new specification requires a new experiment ID and new future epoch.",
+    "policy_hash": "dd380d227b049ae8033a86d6e17796d3ba73ed79e038fde684003c26573a677f"
+  },
+  "promotion_reviews": [
+    {
+      "candidate": "core",
+      "games": 0,
+      "series_count": 0,
+      "delta_log_loss_vs_core": null,
+      "delta_brier_vs_core": null,
+      "bootstrap": null,
+      "gate_status": "COLLECTING",
+      "sample_pass": false,
+      "practical_pass": true,
+      "uncertainty_pass": true,
+      "calibration_pass": true,
+      "decision": "COLLECTING",
+      "reasons": [],
+      "policy_hash": "dd380d227b049ae8033a86d6e17796d3ba73ed79e038fde684003c26573a677f"
+    },
+    {
+      "candidate": "core_flex",
+      "games": 0,
+      "series_count": 0,
+      "delta_log_loss_vs_core": null,
+      "delta_brier_vs_core": null,
+      "bootstrap": null,
+      "gate_status": "COLLECTING",
+      "sample_pass": false,
+      "practical_pass": false,
+      "uncertainty_pass": false,
+      "calibration_pass": false,
+      "decision": "COLLECTING",
+      "reasons": [
+        "minimum prospective sample not reached"
+      ],
+      "policy_hash": "dd380d227b049ae8033a86d6e17796d3ba73ed79e038fde684003c26573a677f"
+    },
+    {
+      "candidate": "core_pool_exhaustion",
+      "games": 0,
+      "series_count": 0,
+      "delta_log_loss_vs_core": null,
+      "delta_brier_vs_core": null,
+      "bootstrap": null,
+      "gate_status": "COLLECTING",
+      "sample_pass": false,
+      "practical_pass": false,
+      "uncertainty_pass": false,
+      "calibration_pass": false,
+      "decision": "COLLECTING",
+      "reasons": [
+        "minimum prospective sample not reached"
+      ],
+      "policy_hash": "dd380d227b049ae8033a86d6e17796d3ba73ed79e038fde684003c26573a677f"
+    },
+    {
+      "candidate": "core_pool_flex",
+      "games": 0,
+      "series_count": 0,
+      "delta_log_loss_vs_core": null,
+      "delta_brier_vs_core": null,
+      "bootstrap": null,
+      "gate_status": "COLLECTING",
+      "sample_pass": false,
+      "practical_pass": false,
+      "uncertainty_pass": false,
+      "calibration_pass": false,
+      "decision": "COLLECTING",
+      "reasons": [
+        "minimum prospective sample not reached"
+      ],
+      "policy_hash": "dd380d227b049ae8033a86d6e17796d3ba73ed79e038fde684003c26573a677f"
+    },
+    {
+      "candidate": "core_pool_remaining",
+      "games": 0,
+      "series_count": 0,
+      "delta_log_loss_vs_core": null,
+      "delta_brier_vs_core": null,
+      "bootstrap": null,
+      "gate_status": "COLLECTING",
+      "sample_pass": false,
+      "practical_pass": false,
+      "uncertainty_pass": false,
+      "calibration_pass": false,
+      "decision": "COLLECTING",
+      "reasons": [
+        "minimum prospective sample not reached"
+      ],
+      "policy_hash": "dd380d227b049ae8033a86d6e17796d3ba73ed79e038fde684003c26573a677f"
+    }
+  ],
+  "live_protocol": {
+    "protocol_id": "live_model_v1_preregistered",
+    "status": "PRE_REGISTERED_NOT_TRAINED",
+    "hash": "d855837b6e0d4c8ca5402f2f6042d6be974c7b941014f09a544360f234a6f819",
+    "hash_ok": true,
+    "readiness": {
+      "status": "EMPTY",
+      "ready": false,
+      "completed_maps": 0,
+      "labeled_snapshots": 0,
+      "unlabeled_snapshots": 0,
+      "raw_snapshots": 1,
+      "teams": 0,
+      "blue_win_rate": null,
+      "checkpoints": {
+        "5": 0,
+        "10": 0,
+        "15": 0,
+        "20": 0,
+        "25": 0,
+        "30": 0
+      },
+      "thresholds": {
+        "maps": 120,
+        "teams": 8,
+        "m5": 80,
+        "m10": 80,
+        "m15": 80,
+        "m20": 60,
+        "m25": 40,
+        "m30": 25
+      },
+      "checks": {
+        "maps": false,
+        "teams": false,
+        "m5": false,
+        "m10": false,
+        "m15": false,
+        "m20": false,
+        "m25": false,
+        "m30": false,
+        "class_balance": true
+      },
+      "policy": {
+        "min_completed_maps": "120",
+        "min_teams": "8",
+        "checkpoint_5": "80",
+        "checkpoint_10": "80",
+        "checkpoint_15": "80",
+        "checkpoint_20": "60",
+        "checkpoint_25": "40",
+        "checkpoint_30": "25",
+        "checkpoint_seconds": "60",
+        "capture_start_second": "180",
+        "training_status": "BLOCKED_UNTIL_READY",
+        "rule": "No live model training/promotion until coverage gate is satisfied. Completed-state snapshots are not admitted as live training rows."
+      },
+      "note": "Only in-progress snapshots are admitted. One compact row per game-minute is kept; terminal completed-state snapshots are excluded from live training."
+    },
+    "split": {
+      "train": 0.65,
+      "validation": 0.15,
+      "test": 0.2,
+      "ordering": "first captured_at per game"
+    },
+    "families": {
+      "live_objectives": [
+        "draft_probability_blue",
+        "game_time_seconds",
+        "gold_diff",
+        "kill_diff",
+        "tower_diff",
+        "dragon_diff",
+        "baron_diff",
+        "inhibitor_diff"
+      ],
+      "live_role_distribution": [
+        "draft_probability_blue",
+        "game_time_seconds",
+        "gold_diff",
+        "kill_diff",
+        "tower_diff",
+        "dragon_diff",
+        "baron_diff",
+        "inhibitor_diff",
+        "top_gold_diff",
+        "jng_gold_diff",
+        "mid_gold_diff",
+        "bot_gold_diff",
+        "sup_gold_diff",
+        "lead_breadth"
+      ]
+    },
+    "primary_evaluation": "macro-average across available canonical checkpoints, equal checkpoint weight",
+    "promotion_review_gate": {
+      "must_improve_test_macro_log_loss_vs_draft": true,
+      "must_improve_test_macro_brier_vs_draft": true,
+      "cluster_bootstrap_unit": "game",
+      "bootstrap_reps": 2000,
+      "require_95pct_upper_ci_le_zero_for_both_primary_deltas": true,
+      "max_ece_degradation_vs_draft": 0.02,
+      "checkpoint_sanity": "at least 3 of 5/10/15/20 improve Log Loss when checkpoint has adequate test coverage",
+      "automatic_promotion": false
+    },
+    "runs": []
+  },
+  "ledger": {
+    "captures": 0,
+    "events": []
+  },
+  "rule": "A passing automated gate creates ELIGIBLE_FOR_REVIEW only. Production status is never changed automatically."
+}

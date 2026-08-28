@@ -1,0 +1,39 @@
+/* ==========================================================================
+   V34/V35 — IDENTIDADE PRÓPRIA: "DATA / QUANT TERMINAL"
+   Não é cópia de nenhum site de referência. Reivindica o roxo que já era a
+   cor original do app (V12-V21), ajustado para a mesma família vívida de
+   roxo/violeta usada por referências que o time gosta (ex.: Twitch) — sem
+   usar o hex exato de marca de terceiros. Soma um ciano de "dado" (--data)
+   reservado SÓ para números de previsão/modelo (%, Elo, Brier, accuracy).
+   O resto da UI (botões, links, nav) usa o roxo como accent normal — o
+   ciano nunca vira cor de ação, só de leitura, pra não perder significado.
+   ========================================================================== */
+:root{
+  --accent:#8452f6;--accent2:#b298ff;
+  --data:#22d3ee;--data2:#67e8f9;
+}
+:root[data-theme="light"]{
+  --accent:#6d2fe0;--accent2:#8452f6;
+  --data:#0891b2;--data2:#0e7490;
+}
+
+/* Marca: gradiente roxo -> ciano no monograma, em vez de tom único genérico */
+.product-mark .mark{background:linear-gradient(135deg,var(--accent),var(--data))}
+
+/* Fonte "de dado": monoespaçada, números alinhados — só para leituras de
+   previsão/modelo, nunca para texto corrido. Sinaliza "isto é calculado". */
+.hero-prediction strong,
+.match-read b,
+.forecast-ribbon strong,
+.trust-strip strong,
+.mini-ranking strong,
+.model-hero strong,
+.score-outcomes strong,
+.draft-result-hero h2,
+.governance-hero-v21 strong{
+  font-family:"JetBrains Mono",ui-monospace,"SFMono-Regular",Consolas,monospace;
+  font-variant-numeric:tabular-nums;
+  letter-spacing:-.2px;
+  background:linear-gradient(100deg,var(--accent),var(--data));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}

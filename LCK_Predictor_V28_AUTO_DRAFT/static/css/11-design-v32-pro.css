@@ -1,0 +1,42 @@
+/* Sistema de design ATUAL: ícones SVG, paleta neutra 'ferramenta pro', alinhamento de topbar/sidebar */
+/* ==========================================================================
+   V32 — LINGUAGEM DE "FERRAMENTA PRO"
+   Ícones reais em SVG (linha, não glifo de fonte) como VSCode/Cursor/Claude/
+   ChatGPT. Paleta de fundo mais neutra, menos "site de conteúdo colorido".
+   Alinhamento e espaçamento consistentes em topbar/sidebar.
+   ========================================================================== */
+:root{
+  --bg:#0a0a0d;--surface:#141417;--surface2:#1a1a1f;--surface3:#222229;
+  --line:rgba(255,255,255,.08);--text:#eef0f3;--muted:#8b8d97;--soft:#c2c4cc;
+}
+:root[data-theme="light"]{
+  --bg:#f6f6f8;--surface:#fff;--surface2:#f5f5f7;--surface3:#ececef;
+  --line:rgba(15,15,20,.09);--text:#131417;--muted:#75767f;--soft:#3d3e46;
+}
+
+/* Ícones SVG: tamanho e alinhamento consistentes em toda a UI */
+.primary-nav button i{width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;flex:none}
+.primary-nav button i svg{width:19px;height:19px}
+.primary-nav button{display:flex;align-items:center;gap:12px}
+.menu-btn svg,.icon-btn svg{width:18px;height:18px;display:block}
+.menu-btn,.icon-btn{display:inline-flex;align-items:center;justify-content:center}
+.back-link svg{width:15px;height:15px;vertical-align:-2px;margin-right:2px}
+
+/* Sidebar: alinhamento de grade mais "editor de código" */
+.nav-shell{padding:16px 12px;gap:0}
+.product-mark{padding:8px 8px 8px 6px;margin-bottom:6px}
+.product-mark .mark{width:30px;height:30px;border-radius:9px;font-size:14px}
+.primary-nav{gap:2px}
+.primary-nav button{padding:9px 10px;font-size:13.5px}
+
+/* Topbar: alinhamento e peso mais discreto, como barra de título de app */
+.app-topbar{padding:0 20px;gap:14px}
+.crumb{font-weight:650;color:var(--text)}
+.top-actions{gap:6px}
+.icon-btn{width:34px;height:34px;background:transparent;border-color:transparent}
+.icon-btn:hover{background:var(--surface2);border-color:var(--line)}
+.menu-btn{background:transparent;border:0;color:var(--text);width:34px;height:34px;border-radius:9px}
+.menu-btn:hover{background:var(--surface2)}
+
+/* Botões-fonte remanescentes (▼ em selects, ← em back-link) herdam a fonte de texto normalmente */
+select{background-image:none}

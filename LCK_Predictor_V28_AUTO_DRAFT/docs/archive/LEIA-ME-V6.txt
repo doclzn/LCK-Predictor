@@ -1,0 +1,13 @@
+LCK PREDICTOR V6
+
+Abra ABRIR_LCK_PREDICTOR.bat.
+
+Principais mudanças:
+- Empirical Bayes para player×champion.
+- Histórico de carreira separado do recorte 2026.
+- Forma atual LCK Rounds 3-4.
+- Cache web S16 atualizável.
+- Contexto LPL + LCK CL conectado, sem contaminar o modelo antes de validação.
+- Intervalo posterior de 80% para cada draft.
+- Confidence agora mede qualidade da evidência.
+- Botão 'Atualizar dados web' na aba Draft.

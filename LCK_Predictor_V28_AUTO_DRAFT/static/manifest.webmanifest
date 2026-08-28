@@ -1,0 +1,17 @@
+{
+  "name": "LCK Predictor V28 — Auto Draft",
+  "short_name": "LCK V25",
+  "description": "Captura automática de drafts por Riot gameMetadata.",
+  "start_url": "/#home",
+  "display": "standalone",
+  "background_color": "#f5f7fb",
+  "theme_color": "#0d1d31",
+  "icons": [
+    {
+      "src": "/static/icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

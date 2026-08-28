@@ -1,0 +1,23 @@
+/* Inspirado no layout oficial do lolesports.com: ícones de time sem caixa/borda
+   de fundo (o escudo "flutua" direto sobre o fundo escuro), o que deixa os
+   logos mais nítidos e a lista de partidas mais leve. */
+
+.team-mark{
+  background:none;
+  border:0;
+  box-shadow:none;
+  border-radius:0;
+  width:38px;height:38px;
+}
+.team-mark img{object-fit:contain}
+.team-mark.small{width:26px;height:26px;border-radius:0}
+.hero-versus .team-mark{width:60px;height:60px}
+
+/* Fallback (logo quebrado): some casos ainda merecem um chip legível */
+.team-mark em{
+  position:static;display:none;transform:none;text-shadow:none;
+  background:var(--surface3);border:1px solid var(--line);border-radius:7px;
+  padding:2px 5px;color:var(--soft);font-size:11px;
+}
+.team-mark.broken{display:inline-flex;align-items:center;justify-content:center}
+.team-mark.broken em{display:inline-block}

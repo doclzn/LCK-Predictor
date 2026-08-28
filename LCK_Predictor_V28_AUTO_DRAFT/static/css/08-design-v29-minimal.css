@@ -1,0 +1,79 @@
+/* Sistema de design ATUAL, base: refresh minimalista (paleta, tipografia, superfícies, bottom-tab mobile) */
+/* ==========================================================================
+   V29 — MINIMALIST REFRESH
+   Direção: praticidade/legibilidade de apps grandes (App Store, Uber, Waze,
+   Google, WhatsApp). Hierarquia tipográfica real, mais respiro, superfícies
+   suaves, accent único e bottom-tab no mobile. Sobrepõe os estilos acima.
+   ========================================================================== */
+:root{
+  --bg:#0b0e13;--surface:#141821;--surface2:#1a1f2b;--surface3:#222836;--line:rgba(255,255,255,.08);
+  --text:#f7f8fa;--muted:#9aa3b2;--soft:#c6cdd9;--accent:#4f8dff;--accent2:#82b1ff;
+  --green:#2fd08c;--red:#ff5d73;--amber:#ffb454;--blue:#4f8dff;
+  --shadow:0 1px 2px rgba(0,0,0,.28),0 12px 32px rgba(0,0,0,.20);--r:18px;
+}
+:root[data-theme="light"]{
+  --bg:#f7f8fa;--surface:#fff;--surface2:#f1f3f7;--surface3:#e8ebf1;--line:rgba(16,24,40,.08);
+  --text:#0e1116;--muted:#69707d;--soft:#3f4653;--accent:#2f6fed;--accent2:#2f6fed;
+  --green:#0fa968;--red:#e5484d;--amber:#b97d10;--blue:#2f6fed;
+  --shadow:0 1px 2px rgba(20,30,55,.05),0 12px 28px rgba(20,30,55,.07);
+}
+html{font-size:16px}
+body{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;letter-spacing:-.1px}
+
+/* Hierarquia tipográfica */
+.page-head h1{font-size:clamp(26px,3.4vw,34px);font-weight:800;letter-spacing:-1.2px;line-height:1.05}
+.hero-copy h1{font-size:clamp(22px,3vw,30px);letter-spacing:-1px}
+.eyebrow{font-size:11.5px;letter-spacing:1.4px;font-weight:800}
+.panel-head h2,.section-head h2{font-size:15px;font-weight:700;letter-spacing:-.2px}
+.page-head p,.panel-head p,.section-head p{font-size:13.5px}
+
+/* Superfícies suaves, menos "caixas" */
+.panel,.hero-match,.feature-card,.empty-panel,.trust-strip,.forecast-ribbon>div,
+.model-hero>div,.entity-card,.champ-card,.team-card,.game-card{
+  border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);
+  background:var(--surface);
+}
+.hero-match{border-radius:22px}
+.panel{padding:16px}
+.stat-row>div,.draft-lines>div,.why-grid>div,.prediction-compare>div,.score-outcomes>div,
+.patch-strip>div,.model-layer-grid>div{background:var(--surface2);border-radius:12px}
+
+/* Controles: pills e foco claro */
+.icon-btn,.ghost-btn,.soft-btn,.back-link,.tabs button,.empty-panel button,
+.draft-launcher button,.legacy-transition button,.link-panel button,.live-callout button{border-radius:999px}
+.tabs{gap:6px}.tabs button{border-color:transparent;background:var(--surface2);padding:8px 14px}
+.tabs button.active{background:var(--text);color:var(--bg);border-color:transparent;font-weight:800}
+.primary-nav button{border-radius:12px}
+.primary-nav button.active{background:color-mix(in srgb,var(--accent) 16%,transparent);color:var(--accent2);box-shadow:none}
+.row-status,.phase{border-radius:999px;border-color:transparent;font-size:12px}
+
+/* Topbar mais limpa */
+.app-topbar{height:60px;backdrop-filter:blur(18px);background:color-mix(in srgb,var(--bg) 86%,transparent)}
+.crumb{font-size:13px;letter-spacing:.2px}
+.version-proof{font-size:11px;color:var(--muted);letter-spacing:.4px}
+
+/* Desktop: trilho lateral mais leve */
+@media(min-width:1101px){
+  .nav-shell{background:transparent;border-right:1px solid var(--line)}
+  .product-mark small{display:none}
+}
+
+/* Mobile: bottom-tab bar (estilo WhatsApp/Uber) */
+@media(max-width:760px){
+  .app-shell{display:block;padding-bottom:calc(64px + env(safe-area-inset-bottom))}
+  .nav-shell{position:fixed;left:0;right:0;bottom:0;top:auto;width:auto;height:auto;
+    border-right:0;border-top:1px solid var(--line);background:color-mix(in srgb,var(--bg) 94%,#000 6%);
+    backdrop-filter:blur(18px);display:flex;padding:6px 6px calc(6px + env(safe-area-inset-bottom));
+    z-index:60;transform:none}
+  .nav-shell.open{left:0}
+  .product-mark,.nav-foot{display:none}
+  .primary-nav{margin:0;width:100%;display:flex;flex-direction:row;gap:2px;justify-content:space-around}
+  .primary-nav button{flex:1;justify-content:center;flex-direction:column;gap:3px;padding:7px 2px;font-size:10.5px;font-weight:700}
+  .primary-nav button i{width:auto;font-size:19px;line-height:1}
+  .primary-nav button span{display:block}
+  .menu-btn{display:none}
+  .app-topbar{padding:0 16px}
+  .page{padding:16px 14px 8px}
+  .hero-match{padding:18px}
+}
+

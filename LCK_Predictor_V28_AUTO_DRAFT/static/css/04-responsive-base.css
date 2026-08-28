@@ -1,0 +1,58 @@
+/* Breakpoints responsivos para tudo em 01-04 (tablet e mobile) */
+@media(max-width:1100px){.app-shell{grid-template-columns:72px 1fr}
+.product-mark>span:last-child,.primary-nav button span,.nav-foot{display:none}
+.nav-shell{padding:16px 10px}
+.product-mark{justify-content:center}
+.primary-nav button{justify-content:center}
+.home-grid{grid-template-columns:1fr}
+.entity-grid,.champ-grid,.team-grid{grid-template-columns:repeat(3,1fr)}
+.model-layer-grid{grid-template-columns:repeat(3,1fr)}
+.patch-strip{grid-template-columns:repeat(4,1fr)}
+}
+
+@media(max-width:760px){.app-shell{display:block}
+.nav-shell{position:fixed;left:-230px;width:220px;transition:.2s}
+.nav-shell.open{left:0}
+.product-mark>span:last-child,.primary-nav button span,.nav-foot{display:block}
+.primary-nav button{justify-content:flex-start}
+.app-topbar{padding:0 14px}
+.menu-btn{display:block;border:0;background:none;color:var(--text);font-size:16px}
+.page{padding:18px 12px}
+.page-head h1{font-size:23px}
+.hero-match{grid-template-columns:1fr}
+.hero-versus{order:-1}
+.hero-match>button{justify-self:start}
+.trust-strip{grid-template-columns:1fr 1fr}
+.trust-strip>div{border-right:0}
+.match-row,.match-row.compact{grid-template-columns:70px 1fr 55px}
+.match-read{grid-column:2}
+.row-status{grid-row:1/3;grid-column:3}
+.list-head{display:none}
+.forecast-ribbon{grid-template-columns:1fr}
+.match-identity{grid-template-columns:1fr 35px 1fr}
+.match-identity>div{grid-template-columns:1fr;justify-items:center;text-align:center}
+.match-identity>div.right{grid-template-columns:1fr;justify-items:center;text-align:center}
+.match-identity strong{font-size:24px}
+.score-outcomes{grid-template-columns:1fr 1fr}
+.stat-row{grid-template-columns:1fr 1fr 1fr}
+.draft-lines{grid-template-columns:1fr}
+.draft-lines>div{grid-template-columns:1fr}
+.participant-table{grid-template-columns:1fr}
+.draft-launcher{grid-template-columns:1fr}
+.draft-launcher>span{display:none}
+.feature-grid{grid-template-columns:1fr 1fr}
+.entity-grid,.champ-grid,.team-grid{grid-template-columns:1fr 1fr}
+.profile-hero{grid-template-columns:70px 1fr}
+.profile-hero>div:nth-child(n+4){grid-column:span 1}
+.data-head,.data-table button{grid-template-columns:1fr 45px 55px 50px}
+.data-head span:nth-child(n+5),.data-table button>*:nth-child(n+5){display:none}
+.specialists{grid-template-columns:1fr 1fr}
+.patch-strip{grid-template-columns:1fr 1fr 1fr}
+.roster-grid{grid-template-columns:1fr 1fr 1fr}
+.model-hero{grid-template-columns:1fr 1fr}
+.model-layer-grid{grid-template-columns:1fr}
+.source-health>div{grid-template-columns:12px 1fr 70px}
+.source-health small{grid-column:2/4}
+}
+
+

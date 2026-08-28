@@ -1,0 +1,49 @@
+/* ==========================================================================
+   V35 — SEÇÕES MAIS RETAS, PALETA CONTIDA, CAIXA ALTA EM RÓTULOS
+   Nenhuma referência enviada (lolesports, Twitch, ChatGPT/Claude, VSCode)
+   usa cantos tão arredondados em painel/seção — só em botões/pills isso
+   faz sentido. Painéis e cards passam a ser retangulares (raio mínimo,
+   só pra suavizar quina). Verde/laranja decorativos (nível de vantagem,
+   medalhas do ranking) saem — a paleta fica só na família roxo/dado que
+   já é nossa. Rótulos e navegação passam a caixa alta.
+   ========================================================================== */
+
+/* --- Painéis/seções: quadrado, não pílula --- */
+.panel,.hero-match,.feature-card,.empty-panel,.trust-strip,.match-identity,
+.entity-card,.champ-card,.team-card,.game-card,.explain-box,.live-callout,
+.schedule-status-v23,.match-center-panel,.auto-draft-v28,
+.stat-row>div,.draft-lines>div,.why-grid>div,.prediction-compare>div,.score-outcomes>div,
+.patch-strip>div,.model-layer-grid>div,.forecast-ribbon>div,.live-team-box,.strategy-context-card,
+.draft-lock-count,.auto-draft-picks-v28>div,.auto-draft-model-v28,.live-draft-side-v28>div{
+  border-radius:6px;
+}
+.hero-match{border-radius:8px}
+
+/* Badges/rótulos: retângulo pequeno, não pílula */
+.eyebrow,.live-signal,.row-status,.phase,.adv-tag{border-radius:4px}
+.row-status,.phase{padding:4px 8px}
+
+/* Botões continuam pílula — é o único elemento "redondo por necessidade",
+   igual ao CTA "Chat" do Twitch e ao "Ver partida" que já tínhamos. */
+
+/* --- Paleta contida: sem verde/âmbar decorativo, só a família roxo --- */
+.adv-tag.adv-tight{color:var(--muted)}
+.adv-tag.adv-soft{color:var(--soft)}
+.adv-tag.adv-mid{color:var(--accent2)}
+.adv-tag.adv-strong{color:var(--accent);font-weight:800}
+
+.mini-ranking button>span:not(.team-mark){background:none;color:var(--muted);font-weight:800}
+.mini-ranking button:nth-child(1)>span:not(.team-mark){background:var(--accent);color:#fff;border-radius:5px}
+.mini-ranking button:nth-child(2)>span:not(.team-mark),
+.mini-ranking button:nth-child(3)>span:not(.team-mark){background:var(--surface3);color:var(--soft);border-radius:5px}
+
+/* --- Ícones de time no ranking: um pouco maiores, mais legíveis --- */
+.mini-ranking .team-mark.small{width:38px;height:38px}
+.mini-ranking button{min-height:56px}
+.mini-ranking b{font-size:1.02rem}
+
+/* --- Caixa alta priorizada em navegação e rótulos de estrutura --- */
+.primary-nav button span{text-transform:uppercase;letter-spacing:.4px;font-size:12.5px}
+.tabs button,.strategy-tabs-v14 button{text-transform:uppercase;letter-spacing:.3px;font-size:12px}
+.crumb{text-transform:uppercase;letter-spacing:.3px;font-size:12px}
+.row-status,.phase{text-transform:uppercase;letter-spacing:.3px}

@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>LCK Predictor - Simulacao visual</title>
+  <style>
+    :root{--ink:#07090e;--panel:#0d1119;--panel2:#121824;--line:#242c3a;--text:#f4f7fb;--muted:#8b96a9;--cyan:#48d7ef;--violet:#876cff;--green:#53e0a1}
+    *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--ink);color:var(--text);font-family:Inter,"Segoe UI",Arial,sans-serif}button{font:inherit;color:inherit}
+    body:before{content:"";position:fixed;inset:0;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);background-size:48px 48px;mask-image:linear-gradient(to bottom,#000,transparent 70%)}
+    .topbar{height:64px;border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 34px;position:sticky;top:0;background:rgba(7,9,14,.96);z-index:5}
+    .brand{display:flex;align-items:center;gap:12px;margin-right:42px}.brand-mark{width:34px;height:34px;background:var(--violet);display:grid;place-items:center;font-weight:950;border-radius:4px;box-shadow:8px 8px 0 rgba(72,215,239,.14)}
+    .brand strong{font-size:15px;letter-spacing:.02em}.brand small{display:block;color:var(--cyan);font:700 10px/1.2 ui-monospace,Consolas,monospace;letter-spacing:.16em;margin-top:3px}
+    nav{display:flex;height:100%;gap:30px}nav button{border:0;background:none;color:#7f899d;text-transform:uppercase;font-size:11px;font-weight:850;letter-spacing:.09em;position:relative}nav button.active{color:#fff}nav button.active:after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:3px;background:var(--cyan)}
+    .top-meta{margin-left:auto;display:flex;align-items:center;gap:18px;font:700 10px ui-monospace,Consolas,monospace;color:var(--muted);letter-spacing:.08em}.live-dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 12px var(--green)}
+    main{max-width:1480px;margin:auto;padding:30px 34px 70px}.context-line{display:flex;justify-content:space-between;align-items:end;margin-bottom:16px}.context-line span{font:800 11px ui-monospace,Consolas,monospace;color:var(--cyan);letter-spacing:.14em}.context-line p{margin:0;color:var(--muted);font-size:12px}
+    .hero{min-height:314px;border:1px solid var(--line);display:grid;grid-template-columns:.82fr 1.3fr;position:relative;overflow:hidden;background:var(--panel)}
+    .hero:after{content:"";position:absolute;width:360px;height:360px;border:80px solid rgba(135,108,255,.07);transform:rotate(25deg);right:-130px;top:-190px}
+    .prediction{padding:42px;border-right:1px solid var(--line);display:flex;flex-direction:column;justify-content:space-between}.kicker{font:800 11px ui-monospace,Consolas,monospace;color:var(--violet);letter-spacing:.15em}.prediction h1{font-size:42px;line-height:.98;letter-spacing:-.05em;margin:12px 0 6px;max-width:380px}.prediction>p{color:var(--muted);font-size:13px;margin:0;max-width:380px;line-height:1.55}.confidence{display:flex;align-items:end;gap:14px;margin-top:25px}.confidence strong{font-size:54px;letter-spacing:-.06em;line-height:.8;color:var(--cyan)}.confidence div{font:700 10px/1.45 ui-monospace,Consolas,monospace;color:var(--muted);text-transform:uppercase}.confidence b{display:block;color:var(--green)}
+    .showdown{padding:34px 46px;display:grid;grid-template-rows:auto 1fr auto;position:relative;z-index:1}.match-meta{display:flex;justify-content:space-between;font:700 11px ui-monospace,Consolas,monospace;color:var(--muted);letter-spacing:.06em}.match-meta b{color:var(--text)}
+    .teams{display:grid;grid-template-columns:1fr 70px 1fr;align-items:center;text-align:center}.team img{width:92px;height:92px;object-fit:contain;filter:drop-shadow(0 12px 20px rgba(0,0,0,.4))}.team h2{font-size:25px;margin:10px 0 2px}.team span{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em}.versus{font:800 13px ui-monospace,Consolas,monospace;color:var(--muted)}
+    .odds{display:grid;grid-template-columns:77.5fr 22.5fr;height:6px;background:#1c2330}.odds span:first-child{background:var(--violet)}.odds span:last-child{background:var(--cyan)}.odds-labels{display:flex;justify-content:space-between;margin-top:8px;font:700 10px ui-monospace,Consolas,monospace;color:var(--muted)}
+    .signal-strip{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line);border-top:0;background:#090c12}.signal{padding:15px 18px;border-right:1px solid var(--line)}.signal:last-child{border:0}.signal small{font:700 9px ui-monospace,Consolas,monospace;color:var(--muted);letter-spacing:.12em}.signal strong{display:block;font-size:14px;margin-top:5px}.signal strong.good{color:var(--green)}
+    .workspace{display:grid;grid-template-columns:1.55fr .75fr;gap:22px;margin-top:28px}.section-heading{display:flex;justify-content:space-between;align-items:end;padding-bottom:12px;border-bottom:1px solid var(--line)}.section-heading h2{font-size:20px;letter-spacing:-.03em;margin:0}.section-heading p{font-size:11px;color:var(--muted);margin:4px 0 0}.section-heading button{border:0;background:none;color:var(--cyan);font:800 10px ui-monospace,Consolas,monospace;letter-spacing:.08em}
+    .day{padding-top:17px}.day-title{display:flex;align-items:center;gap:12px;margin-bottom:8px;font:800 10px ui-monospace,Consolas,monospace;color:var(--muted);letter-spacing:.1em}.day-title:after{content:"";height:1px;background:var(--line);flex:1}
+    .fixture{display:grid;grid-template-columns:76px 1fr 82px 1fr 118px 28px;align-items:center;min-height:72px;border-bottom:1px solid var(--line);padding:8px 10px;background:transparent}.fixture:hover{background:var(--panel)}.time strong{font-size:17px}.time span{display:block;font-size:10px;color:var(--muted);margin-top:3px}.club{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:800}.club.right{justify-content:flex-end}.club img{width:34px;height:34px;object-fit:contain}.score{text-align:center;font:800 12px ui-monospace,Consolas,monospace;color:var(--muted)}
+    .read{text-align:right}.read small{display:block;color:var(--muted);font-size:9px;text-transform:uppercase}.read b{font:800 11px ui-monospace,Consolas,monospace;color:var(--violet)}.arrow{color:var(--cyan);font-size:18px;text-align:right}
+    .ranking{border-left:1px solid var(--line);padding-left:22px}.rank-row{display:grid;grid-template-columns:26px 38px 1fr auto;align-items:center;gap:10px;border-bottom:1px solid var(--line);min-height:64px}.rank-row>span{font:700 11px ui-monospace,Consolas,monospace;color:var(--muted)}.rank-row:first-of-type>span{color:var(--cyan)}.rank-row img{width:34px;height:34px;object-fit:contain}.rank-row b{font-size:13px}.rank-row small{display:block;color:var(--muted);font-size:10px;margin-top:3px}.elo{text-align:right;font:800 12px ui-monospace,Consolas,monospace}.elo i{display:block;color:var(--green);font-style:normal;font-size:9px;margin-top:4px}
+    .model-note{margin-top:24px;padding:18px;border:1px solid var(--line);background:var(--panel)}.model-note span{font:800 9px ui-monospace,Consolas,monospace;color:var(--violet);letter-spacing:.12em}.model-note h3{font-size:15px;margin:8px 0}.model-note p{font-size:11px;line-height:1.55;color:var(--muted);margin:0}
+    .preview-label{position:fixed;right:18px;bottom:18px;background:var(--cyan);color:#061016;padding:8px 11px;font:900 10px ui-monospace,Consolas,monospace;letter-spacing:.08em;z-index:8}
+    @media(max-width:900px){.topbar{padding:0 16px}.brand{margin-right:auto}nav{display:none}.top-meta span{display:none}main{padding:20px 16px}.hero{grid-template-columns:1fr}.prediction{border-right:0;border-bottom:1px solid var(--line);padding:28px}.showdown{padding:28px 20px}.workspace{grid-template-columns:1fr}.ranking{border-left:0;padding-left:0}.signal-strip{grid-template-columns:1fr 1fr}.signal:nth-child(2){border-right:0}.fixture{grid-template-columns:58px 1fr 38px 1fr 72px}.arrow{display:none}.club{flex-direction:column;gap:4px}.club.right{flex-direction:column-reverse}.club img{width:28px;height:28px}.read b{font-size:9px}}
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><div class="brand-mark">L</div><div><strong>LCK Predictor</strong><small>MATCH INTELLIGENCE</small></div></div>
+    <nav><button class="active">Visão geral</button><button>Partidas</button><button>Draft Lab</button><button>Equipes</button><button>Modelo</button></nav>
+    <div class="top-meta"><i class="live-dot"></i><span>RIOT DATA ONLINE</span><span>UTC-3</span></div>
+  </header>
+  <main>
+    <div class="context-line"><span>LCK 2026 / ROUNDS 3-4</span><p>Atualizado há 2 minutos</p></div>
+    <section class="hero">
+      <div class="prediction">
+        <div><span class="kicker">PRÓXIMO DESTAQUE / 26 AGO</span><h1>Uma leitura clara antes do draft.</h1><p>Forma recente, força do elenco e contexto competitivo combinados em uma previsão auditável.</p></div>
+        <div class="confidence"><strong>77.5%</strong><div>probabilidade KT<b>vantagem clara</b></div></div>
+      </div>
+      <div class="showdown">
+        <div class="match-meta"><span>AMANHÃ / 05:00</span><b>PLAY-INS · MD5</b></div>
+        <div class="teams"><div class="team"><img src="team_icons/KT.svg" alt="KT"><h2>KT Rolster</h2><span>Ranking #5</span></div><div class="versus">VS</div><div class="team"><img src="team_icons/BRO.svg" alt="BRO"><h2>BRION</h2><span>Ranking #8</span></div></div>
+        <div><div class="odds"><span></span><span></span></div><div class="odds-labels"><span>KT 77.5%</span><span>22.5% BRO</span></div></div>
+      </div>
+    </section>
+    <div class="signal-strip">
+      <div class="signal"><small>MODELO</small><strong>Pré-jogo v12.4</strong></div><div class="signal"><small>CONFIANÇA</small><strong class="good">Alta</strong></div><div class="signal"><small>CALIBRAÇÃO</small><strong>0.184 Brier</strong></div><div class="signal"><small>AMOSTRA</small><strong>1.284 séries</strong></div>
+    </div>
+    <div class="workspace">
+      <section>
+        <div class="section-heading"><div><h2>Agenda da LCK</h2><p>Partidas ordenadas por data e relevância</p></div><button>VER AGENDA COMPLETA →</button></div>
+        <div class="day"><div class="day-title">QUARTA · 26 AGO</div>
+          <div class="fixture"><div class="time"><strong>05:00</strong><span>Play-ins</span></div><div class="club"><img src="team_icons/KT.svg" alt="">KT</div><div class="score">0—0</div><div class="club right">BRO<img src="team_icons/BRO.svg" alt=""></div><div class="read"><small>favorito</small><b>KT 77.5%</b></div><div class="arrow">›</div></div>
+        </div>
+        <div class="day"><div class="day-title">QUINTA · 27 AGO</div>
+          <div class="fixture"><div class="time"><strong>05:00</strong><span>Play-ins</span></div><div class="club"><img src="team_icons/NS.svg" alt="">NS</div><div class="score">0—0</div><div class="club right">BFX<img src="team_icons/BFX.svg" alt=""></div><div class="read"><small>favorito</small><b>BFX 52.1%</b></div><div class="arrow">›</div></div>
+        </div>
+        <div class="day"><div class="day-title">SÁBADO · 29 AGO</div>
+          <div class="fixture"><div class="time"><strong>05:00</strong><span>Playoffs</span></div><div class="club"><img src="team_icons/T1.svg" alt="">T1</div><div class="score">VS</div><div class="club right">DK<img src="team_icons/DK.svg" alt=""></div><div class="read"><small>status</small><b>AGENDADA</b></div><div class="arrow">›</div></div>
+        </div>
+      </section>
+      <aside class="ranking">
+        <div class="section-heading"><div><h2>Power ranking</h2><p>Elo atual e tendência</p></div><button>EXPLORAR →</button></div>
+        <div class="rank-row"><span>01</span><img src="team_icons/GEN.svg" alt=""><div><b>Gen.G</b><small>12–2 · 86% WR</small></div><div class="elo">1774<i>▲ 12</i></div></div>
+        <div class="rank-row"><span>02</span><img src="team_icons/HLE.svg" alt=""><div><b>Hanwha Life</b><small>11–3 · 79% WR</small></div><div class="elo">1746<i>▲ 4</i></div></div>
+        <div class="rank-row"><span>03</span><img src="team_icons/DK.svg" alt=""><div><b>Dplus KIA</b><small>10–4 · 71% WR</small></div><div class="elo">1740<i>— 0</i></div></div>
+        <div class="rank-row"><span>04</span><img src="team_icons/T1.svg" alt=""><div><b>T1</b><small>9–5 · 64% WR</small></div><div class="elo">1661<i>▲ 7</i></div></div>
+        <div class="rank-row"><span>05</span><img src="team_icons/KT.svg" alt=""><div><b>KT Rolster</b><small>8–6 · 57% WR</small></div><div class="elo">1535<i>▼ 3</i></div></div>
+        <div class="model-note"><span>POR QUE KT?</span><h3>Forma recente pesa mais que o confronto direto.</h3><p>A vantagem estimada combina Elo, estabilidade do elenco e desempenho dos últimos cinco jogos. Dados fictícios nesta simulação.</p></div>
+      </aside>
+    </div>
+  </main>
+  <div class="preview-label">SIMULAÇÃO · NÃO PUBLICADA</div>
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="pt-BR" data-ui-scale="normal">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0a0d14">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="LCK Predictor">
+  <meta name="description" content="LCK Predictor — inteligência de partidas, draft e análise da LCK.">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" href="/static/icons/icon.svg" type="image/svg+xml">
+  <title>LCK Predictor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&family=JetBrains+Mono:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/01-base-shell.css?build=V32_PRO_1">
+  <link rel="stylesheet" href="/static/css/02-match-detail-legacy.css?build=V32_PRO_1">
+  <link rel="stylesheet" href="/static/css/03-explore-profile-model.css?build=V32_PRO_1">
+  <link rel="stylesheet" href="/static/css/04-responsive-base.css?build=V32_PRO_1">
+  <link rel="stylesheet" href="/static/css/05-draft-lab-engine.css?build=V32_PRO_1">
+  <link rel="stylesheet" href="/static/css/06-validation-governance.css?build=V32_PRO_1">
+  <link rel="stylesheet" href="/static/css/07-legacy-ux-history.css?build=V32_PRO_1">
+  <link rel="stylesheet" href="/static/css/08-design-v29-minimal.css?build=V32_PRO_1">
+  <link rel="stylesheet" href="/static/css/09-design-v30-friendly.css?build=V32_PRO_1">
+  <link rel="stylesheet" href="/static/css/10-design-v31-color.css?build=V32_PRO_1">
+  <link rel="stylesheet" href="/static/css/11-design-v32-pro.css?build=V32_PRO_1">
+  <link rel="stylesheet" href="/static/css/12-lolesports-inspired.css?build=V33_LOL_1">
+  <link rel="stylesheet" href="/static/css/13-brand-quant-identity.css?build=V34_BRAND_1">
+  <link rel="stylesheet" href="/static/css/14-square-mono-caps.css?build=V35_SQUARE_1">
+  <link rel="stylesheet" href="/static/css/15-topnav-modern.css?build=V36_TOPNAV_1">
+  <script>
+    if(new URLSearchParams(location.search).get("preview")==="home-layout"){
+      document.documentElement.classList.add("home-layout-preview");
+      const previewStyle=document.createElement("link");
+      previewStyle.rel="stylesheet";
+      previewStyle.href="/static/css/16-home-layout-preview.css?build=PREVIEW_1";
+      document.head.appendChild(previewStyle);
+    }
+  </script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="nav-shell" id="navShell">
+      <button class="product-mark" onclick="go('home')" aria-label="Início">
+        <span class="mark">L</span>
+        <span><b>LCK Predictor</b><small>Match Intelligence</small></span>
+      </button>
+      <nav class="primary-nav">
+        <button data-nav="home" onclick="go('home')"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V9.5"/></svg></i><span>Home</span></button>
+        <button data-nav="matches" onclick="go('matches')"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="16" rx="2.2"/><path d="M16 2.5v4M8 2.5v4M3 10h18"/></svg></i><span>Matches</span></button>
+        <button data-nav="draft" onclick="go('draft')"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7.5" height="7.5" rx="1.3"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.3"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.3"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.3"/></svg></i><span>Draft Lab</span></button>
+        <button data-nav="explore" onclick="go('explore')"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2 5-5 2 2-5 5-2z"/></svg></i><span>Explore</span></button>
+        <button data-nav="model" onclick="go('model')"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4v16h16"/><path d="M8 17v-4M13 17V9M18 17v-7"/></svg></i><span>Model</span></button>
+      </nav>
+      <div class="nav-foot">
+        <div class="crumb" id="crumb">Home</div><div class="version-proof" id="versionProof">V29 • PORTA 8828 • MINIMAL</div>
+        <button class="menu-btn" id="menuBtn" aria-label="Menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+      </div>
+    </header>
+
+    <main class="main-shell">
+      <header class="app-topbar"></header>
+      <div class="page" id="page"><div class="loading">Carregando…</div></div>
+    </main>
+  </div>
+  <button class="icon-btn theme-float" id="themeBtn" title="Alternar tema"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 3v2M12 19v2M4.6 4.6l1.4 1.4M18 18l1.4 1.4M3 12h2M19 12h2M4.6 19.4l1.4-1.4M18 6l1.4-1.4"/></svg></button>
+  <div class="toast" id="toast"></div>
+  <script src="/static/js/01-state.js?build=V32_PRO_1" defer></script>
+  <script src="/static/js/02-format-utils.js?build=V32_PRO_1" defer></script>
+  <script src="/static/js/03-router-core.js?build=V32_PRO_1" defer></script>
+  <script src="/static/js/04-match-card.js?build=V32_PRO_1" defer></script>
+  <script src="/static/js/05-page-home.js?build=V32_PRO_1" defer></script>
+  <script src="/static/js/06-page-matches.js?build=V32_PRO_1" defer></script>
+  <script src="/static/js/07-page-draft-core.js?build=V32_PRO_1" defer></script>
+  <script src="/static/js/08-draft-strategy-engine.js?build=V32_PRO_1" defer></script>
+  <script src="/static/js/09-page-explore.js?build=V32_PRO_1" defer></script>
+  <script src="/static/js/10-page-model.js?build=V32_PRO_1" defer></script>
+  <script src="/static/js/11-router-init.js?build=V32_PRO_1" defer></script>
+</body>
+</html>

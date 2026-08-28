@@ -1,0 +1,54 @@
+{
+  "release": "V24 QA Review",
+  "status": "PASS",
+  "tests_passed": [
+    "test_riot_v10.py",
+    "test_strategy_v14.py",
+    "test_draft_tree_v15.py",
+    "test_flex_tree_v16.py",
+    "test_joint_v17.py",
+    "test_series_v18.py",
+    "test_validation_v19.py",
+    "test_live_validation_v20.py",
+    "test_governance_v21.py",
+    "test_live_protocol_v21.py",
+    "test_core_invariants_v24.py"
+  ],
+  "typography": {
+    "v23_explicit_px_below_12": 294,
+    "v24_explicit_px_below_14": 0,
+    "v24_min_px": 14.0,
+    "v24_min_rem": 0.78,
+    "default_root_px": 18,
+    "user_scales": [
+      "Grande",
+      "Maior",
+      "Máxima"
+    ]
+  },
+  "schedule": {
+    "local_now": "2026-08-20T23:30:34.151256-03:00",
+    "pending_sync": 0,
+    "issues": [],
+    "ok": true
+  },
+  "scientific_integrity": "OK",
+  "verified_results_added": [
+    {
+      "date": "2026-08-20",
+      "match": "HLE 2-0 DK"
+    },
+    {
+      "date": "2026-08-20",
+      "match": "NS 2-0 KRX"
+    }
+  ],
+  "process_fixes": [
+    "single canonical match state machine",
+    "date-only timezone-safe formatting",
+    "stale cache never presented as live/upcoming",
+    "historical draft regressions use frozen rating_override",
+    "scientific governance separated from evolving UI/release integrity",
+    "minimum typography enforced by automated test"
+  ]
+}

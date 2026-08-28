@@ -1,0 +1,19 @@
+# Bancos de dados e backups (185 MB) - dados derivados do Oracle's Elixir
+LCK_Predictor_V28_AUTO_DRAFT/data/*.sqlite
+LCK_Predictor_V28_AUTO_DRAFT/data/*.sqlite-shm
+LCK_Predictor_V28_AUTO_DRAFT/data/*.sqlite-wal
+LCK_Predictor_V28_AUTO_DRAFT/data/*.backup-*
+
+# Runtime Python portatil com site-packages (346 MB)
+LCK_Predictor_V28_AUTO_DRAFT/runtime/
+
+# CSVs do Oracle's Elixir (redistribuicao nao autorizada)
+*.csv
+
+# Capturas e artefatos locais
+LCK_Predictor_V28_AUTO_DRAFT/data/live_tests/
+LCK_Predictor_V28_AUTO_DRAFT/data/riot_capture/
+LCK_Predictor_V28_AUTO_DRAFT/_gol_*.html
+
+__pycache__/
+*.pyc

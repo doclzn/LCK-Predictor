@@ -1,0 +1,122 @@
+LCK PREDICTOR V26 — CLEAN UI
+
+IMPORTANTE: esta versão usa a PORTA 8826 e não contém Guia de Uso.
+No topo deve aparecer: V26 • PORTA 8826 • SEM GUIA.
+
+V25.2 — GUIA REMOVIDO
+
+O Guia de Uso/modal foi removido completamente da interface.
+
+LCK PREDICTOR V25 — FRESH UI
+
+IMPORTANTE: V25 usa a porta 8825, diferente das versões antigas.
+No topo da tela deve aparecer: V25 • PORTA 8825 • NOVA INTERFACE.
+
+Se essa frase não aparecer, você NÃO está vendo a V25.
+
+A fonte padrão agora inicia em MÁXIMA.
+A Home correta não mostra HLE × DK como futuro/live; esse confronto aparece somente em resultados de 20/08.
+
+LCK PREDICTOR V23 — MATCHDAY UX
+
+CORREÇÃO IMPORTANTE
+- partidas antigas não ficam mais em Próximas;
+- cache Riot antigo não aparece como Ao vivo;
+- datas sem horário não voltam um dia por causa do fuso;
+- botão 'Atualizar agora' consulta a agenda Riot;
+- agenda agrupada por dia;
+- logos Riot usados automaticamente quando disponíveis.
+
+ABRIR
+1. Extraia todo o ZIP em uma pasta nova.
+2. Execute ABRIR_LCK_PREDICTOR.bat.
+
+V22 — UX Refresh
+
+- letras maiores
+- cards maiores e mais legíveis
+- guia rápido de uso
+- botão flutuante "Como usar"
+- ícones dos times nas listas e destaques
+
+LCK PREDICTOR V21 — MODEL GOVERNANCE
+
+ABRIR O APP
+1. Extraia o ZIP inteiro em uma pasta nova.
+2. Execute ABRIR_LCK_PREDICTOR.bat.
+3. Na primeira execução, o launcher baixa o runtime portátil oficial do Python.
+
+O QUE A V21 MUDA
+
+A V21 não tenta aumentar a accuracy com mais uma heurística.
+Ela cria um lockbox para que os próximos testes realmente sejam prospectivos.
+
+1. V19 CANDIDATES CONGELADAS POR HASH
+   - core
+   - core + pool exhaustion
+   - core + remaining pool
+   - core + flex
+   - core + exhaustion + flex
+
+   Alterar coeficiente, feature list, scaler ou modelo durante o mesmo epoch
+   gera drift de integridade e bloqueia a candidata.
+
+2. PROSPECTIVE CAPTURE LEDGER
+   Cada nova previsão válida recebe:
+   - experiment ID;
+   - model definition hash;
+   - feature hash;
+   - timestamp;
+   - game ID;
+   - capture status.
+
+3. GATE DE PROMOÇÃO PRÉ-REGISTRADO
+   Mínimo:
+   - 100 mapas futuros;
+   - 40 séries futuras;
+   - captura até 5 min;
+   - Δ Log Loss <= -0.005;
+   - Δ Brier <= -0.002;
+   - ambos IC95% bootstrap com upper bound <= 0;
+   - ECE no máximo +0.01 pior que o core.
+
+   Mesmo passando tudo, o resultado é apenas:
+       ELIGIBLE_FOR_REVIEW
+   Nunca existe promoção automática para Production.
+
+4. LIVE MODEL V1 PRÉ-REGISTRADO
+   O protocolo foi congelado ANTES de haver dataset suficiente.
+
+   - 120 mapas mínimos;
+   - 8 times;
+   - checkpoints 5/10/15/20/25/30 min;
+   - split cronológico 65/15/20 por MAPA;
+   - snapshots do mesmo mapa nunca atravessam splits;
+   - seleção de família e C apenas no validation set;
+   - test set abre uma única vez por protocol ID;
+   - segunda tentativa de retuning é recusada.
+
+5. TREINO PORTÁTIL
+   Quando o gate estiver pronto:
+       TREINAR_LIVE_QUANDO_PRONTO.bat
+
+   Até lá, o script encerra sem ajustar qualquer modelo.
+
+6. RELATÓRIO DE GOVERNANÇA
+       VERIFICAR_GOVERNANCA.bat
+
+COLETA LIVE
+       COLETAR_LCK_LIVE.bat
+
+DOCUMENTAÇÃO
+       REVIEW_V21_MODEL_GOVERNANCE.md
+       governance\GOVERNANCE_LOCK_V21.json
+       governance\PROMOTION_POLICY_V21.json
+       governance\LIVE_TRAINING_PROTOCOL_V21.json
+
+IMPORTANTE
+A V21 não promoveu nenhum modelo novo.
+V8 continua Production.
+Pool exhaustion continua candidato prospectivo.
+Flex preditivo continua rejeitado retrospectivamente.
+Live continua bloqueado para treino na base distribuída porque a amostra futura ainda é insuficiente.
