@@ -138,11 +138,34 @@ Backup pre-run: `/tmp/lck_data_v1.sqlite.pre_champ_features.bak`.
 
 ### Proximo passo sugerido (nao executado)
 
-Nenhuma acao de codigo pendente imediata. Op(c)oes para continuar:
-- Deixar `core_champ_all` acumular jogos/series futuras da LCK ate
-  bater o minimo do gate prospectivo (100 mapas / 40 series) e so
-  entao revisar promocao.
-- Se quiser reforcar a amostra dos canais de campeao com a LPL (o
-  "achado colateral" do handoff original), rodar de novo com
-  `MODEL_LEAGUES=LCK,LPL EVAL_LEAGUES=LCK` e comparar contra esta
-  baseline LCK-only.
+Nenhuma acao de codigo pendente imediata. Deixar `core_champ_all`
+acumular jogos/series futuras da LCK ate bater o minimo do gate
+prospectivo (100 mapas / 40 series) e so entao revisar promocao.
+
+## Atualizacao — 2026-08-29: teste com LCK+LPL no gate oficial
+
+Rodado `MODEL_LEAGUES=LCK,LPL EVAL_LEAGUES=LCK` no gate oficial (ele
+retreina TODAS as features, nao so as de campeao, com a liga extra —
+diferente do `scripts/research/canais.py`, que mantinha elo/mastery/
+synergy fixos em LCK e so trocava a fonte dos tres canais de campeao).
+
+Resultado: como esperado pelo achado original, o `core` baseline piora
+com LPL misturada (log_loss 0.6164 -> 0.6185, calibration_slope 0.92 ->
+0.80 — mastery/synergy sao features por jogador e a LPL nao acrescenta
+observacao dos jogadores da LCK). O `core_champ_all` final ficou em
+log_loss 0.6127 (pior que 0.6122 so-LCK) mas com AUC 0.7187 (melhor que
+0.7120) e acuracia 0.6734 (melhor que 0.6667) — sinal misto, nao uma
+vitoria clara sobre a baseline LCK-only.
+
+**Conclusao prática:** manter a config de producao (`MODEL_LEAGUES=LCK`,
+o default) e correta. Para de fato capturar o beneficio da LPL nos
+canais de campeao sem contaminar mastery/synergy, seria preciso separar
+a fonte por feature (uma env var so para os tres canais de campeao,
+tipo `CHAMP_LEAGUES`, independente de `MODEL_LEAGUES`) — e o que
+`canais.py` ja faz de forma isolada, mas `build_dataset` hoje usa uma
+unica fonte para tudo. Nao implementado; e trabalho de escopo maior,
+nao decidido como prioridade.
+
+O banco foi restaurado ao estado oficial (`MODEL_LEAGUES=LCK`) apos o
+teste — os numeros em `validation_experiments_v19`/`validation_freeze_v19`
+sao os mesmos da rodada anterior (log_loss 0.6122 para `core_champ_all`).
