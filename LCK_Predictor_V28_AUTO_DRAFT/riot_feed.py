@@ -245,15 +245,54 @@ def fetch_event_live(event_id,delay_seconds=60):
     d=get_details(game["id"],t)
     return normalize(event_id,event,w,d,game)
 
-def fetch_game_snapshot(event_id,game_id,delay_seconds=0):
-    """Fetch one specific game, including a completed map from a prior series."""
+def locate_completed_game(game_id, around_iso, span_hours=10, step_minutes=10):
+    """Descobre o instante do último frame de um mapa já encerrado.
+
+    A window API só responde para um startingTime dentro da janela em que o
+    jogo foi transmitido; para um mapa antigo, 'agora' devolve HTTP 400. Varre o
+    dia a passos largos e devolve o timestamp do frame final — é o que permite
+    recuperar draft e resultado de partidas passadas."""
+    base=_parse_iso(around_iso)
+    if not base: return None
+    base=base.astimezone(timezone.utc).replace(tzinfo=timezone.utc)-timedelta(minutes=10)
+    last=None; seen=False
+    t=base; end=base+timedelta(hours=span_hours)
+    while t<end:
+        try:
+            w=get_window(game_id,t.strftime("%Y-%m-%dT%H:%M:%SZ"))
+        except Exception:
+            t+=timedelta(minutes=step_minutes); continue
+        frames=(w or {}).get("frames") or []
+        if frames:
+            seen=True
+            for f in frames:
+                ts=f.get("rfc460Timestamp")
+                if ts and (last is None or ts>last): last=ts
+        elif seen:
+            break
+        t+=timedelta(minutes=step_minutes)
+    if not last: return None
+    # A window API exige startingTime alinhado em 10 s e sem milissegundos; o
+    # rfc460Timestamp do frame traz ambos e seria recusado com HTTP 400.
+    dt=_parse_iso(last)
+    if not dt: return None
+    dt=dt.astimezone(timezone.utc).replace(microsecond=0)
+    dt=dt-timedelta(seconds=dt.second%10)
+    return dt.strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def fetch_game_snapshot(event_id,game_id,delay_seconds=0,starting_time=None):
+    """Fetch one specific game, including a completed map from a prior series.
+
+    `starting_time` (ISO Z) fixa o instante consultado; sem ele a janela é
+    'agora menos delay', que só funciona enquanto o mapa está no ar."""
     ep=get_event_details(event_id)
     event=event_from_details(ep)
     if not event: raise RuntimeError("EventDetails não retornou evento")
     games=((event.get("match") or {}).get("games") or [])
     game=next((g for g in games if str(g.get("id"))==str(game_id)),None)
     if not game: raise RuntimeError("Game ID não pertence ao evento")
-    t=feed_time(delay_seconds)
+    t=starting_time or feed_time(delay_seconds)
     w=get_window(game_id,t)
     d=get_details(game_id,t)
     return normalize(event_id,event,w,d,game)

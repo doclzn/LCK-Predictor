@@ -120,3 +120,22 @@ V8 continua Production.
 Pool exhaustion continua candidato prospectivo.
 Flex preditivo continua rejeitado retrospectivamente.
 Live continua bloqueado para treino na base distribuída porque a amostra futura ainda é insuficiente.
+
+AMBIENTE PYTHON (fora do Windows)
+Os arquivos .bat usam runtime\python.exe, o runtime portatil do Windows. Ele
+NAO vai para o repositorio (esta no .gitignore, ~100 MB). Em outra maquina, ou
+depois de clonar do GitHub, monte o ambiente assim:
+
+       python3 -m venv .venv
+       .venv/bin/pip install -r requirements.txt
+       gunzip -k data/lck_data_v1.sqlite.gz
+
+O app em si (server.py) so precisa da biblioteca padrao; requirements.txt
+cobre validacao, pesquisa e testes. Para rodar:
+
+       .venv/bin/python server.py
+       .venv/bin/python -m pytest tests/
+
+Para reconstruir runtime/ no Windows, baixe o "Windows embeddable package" do
+python.org, habilite site-packages descomentando "import site" no arquivo
+pythonXY._pth, e instale requirements.txt com get-pip.

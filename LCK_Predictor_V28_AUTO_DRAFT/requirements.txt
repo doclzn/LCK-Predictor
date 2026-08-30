@@ -1,0 +1,17 @@
+# O app em si (server.py + riot_feed.py) usa apenas a biblioteca padrão —
+# é o que permite distribuí-lo com o runtime portátil do Windows.
+#
+# As dependências abaixo são para VALIDAÇÃO e PESQUISA: scripts/run_validation_v19.py,
+# scripts/research/ e scripts/research_v29/, além da suíte de testes.
+#
+#   python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
+#
+# Versões travadas nas que foram usadas para rodar a suíte em 2026-08-29.
+
+numpy==2.0.2
+pandas==2.3.3
+scikit-learn==1.6.1
+scipy==1.13.1
+
+# Testes
+pytest==8.4.2

@@ -6,12 +6,17 @@ data/*.sqlite
 data/*.sqlite-journal
 data/*.backup-*.sqlite
 
-# Runtime portatil do Python
+# Runtime portatil do Python (Windows)
 runtime/
+
+# Ambiente virtual local (fora do Windows nao ha runtime/; ver requirements.txt)
+.venv/
+venv/
 
 # Caches
 __pycache__/
 *.pyc
+.pytest_cache/
 
 # Artefatos de captura HTML
 _gol_*.html

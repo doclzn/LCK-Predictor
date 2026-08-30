@@ -1,6 +1,8 @@
 
 from __future__ import annotations
 
+import contextlib
+import functools
 import json
 import hashlib
 import math
@@ -38,6 +40,7 @@ from riot_feed import (
     fetch_event_live_incremental as riot_fetch_event_live_incremental,
     RealtimeCursor as riot_RealtimeCursor,
     fetch_draft_probe as riot_fetch_draft_probe,
+    locate_completed_game as riot_locate_completed_game,
     discover_live_games as riot_discover_live_games,
     fetch_live_draft as riot_fetch_live_draft,
     DraftNotReady as riot_DraftNotReady,
@@ -91,16 +94,42 @@ FULL_NAMES = {
     "NS":"Nongshim RedForce","BFX":"BNK FEARX","KT":"KT Rolster",
     "DK":"Dplus KIA","T1":"T1","GEN":"Gen.G","HLE":"Hanwha Life Esports",
 }
+# Grafias que o feed da Riot usa e que não batem com ALIASES nem por
+# diferença de caixa: "NONGSHIM RED FORCE" tem um espaço a mais que
+# "Nongshim RedForce", e "Gen.G Esports" traz o sufixo. Enquanto canonical()
+# não as conhecia, toda série de NS ou GEN vinda do feed era descartada em
+# silêncio e nunca entrava no histórico de Elo.
+RIOT_TEAM_ALIASES = {
+    "gen.g esports": "GEN",
+    "nongshim red force": "NS",
+    "nongshim redforce": "NS",
+    "dplus kia": "DK",
+    "hanwha life esports": "HLE",
+}
+RIOT_CONTEXT_ONLY_LEAGUES = {"lck challengers", "lck challengers league"}
 
 
+@contextlib.contextmanager
 def db_connect():
     """Conexão única do app. O servidor é multi-thread e, durante uma série ao
     vivo, várias requisições escrevem ao mesmo tempo (snapshot, evento, jogos,
     health). Sem busy_timeout o segundo escritor falha na hora com
-    'database is locked' e derruba a requisição."""
+    'database is locked' e derruba a requisição.
+
+    É um context manager próprio de propósito: `with sqlite3.connect(...)` faz
+    commit/rollback mas NÃO fecha a conexão, deixando o handle pendurado até o
+    coletor de lixo passar. Sob a árvore de draft isso chegava a milhares de
+    handles abertos por requisição."""
     con = sqlite3.connect(DB, timeout=15)
     con.execute("PRAGMA busy_timeout=15000")
-    return con
+    try:
+        yield con
+        con.commit()
+    except Exception:
+        con.rollback()
+        raise
+    finally:
+        con.close()
 
 
 def _enable_wal_once():
@@ -132,6 +161,48 @@ def json_bytes(obj):
 
 def elo_prob(a, b):
     return 1.0 / (1.0 + 10.0 ** (-(float(a)-float(b))/400.0))
+
+
+# O Elo é ajustado uma vez por série, sem distinguir formato: no histórico do
+# banco 91% das séries são BO3, então a probabilidade que sai de elo_prob é, na
+# prática, "probabilidade de vencer um BO3". Entregá-la sem conversão num BO5
+# subestima o favorito — o formato mais longo dá mais espaço para a diferença de
+# força aparecer.
+SERIES_REFERENCE_BEST_OF = 3
+
+
+def series_map_probability(p_series, best_of=SERIES_REFERENCE_BEST_OF):
+    """Inverte a probabilidade de série para a probabilidade por mapa que a
+    produz, assumindo mapas i.i.d. Bisseção sobre a mesma árvore recursiva usada
+    em _series_score_outcomes_binomial."""
+    best_of = int(best_of or SERIES_REFERENCE_BEST_OF)
+    p = min(max(float(p_series), 1e-6), 1 - 1e-6)
+    if best_of <= 1:
+        return p
+    lo, hi = 0.0, 1.0
+    for _ in range(60):
+        mid = (lo + hi) / 2
+        if _v18_series_win_prob(0, 0, best_of, mid, mid) < p:
+            lo = mid
+        else:
+            hi = mid
+    return (lo + hi) / 2
+
+
+def convert_series_probability(p_series, target_best_of,
+                               source_best_of=SERIES_REFERENCE_BEST_OF):
+    """Reexpressa uma probabilidade de série calibrada em `source_best_of` para
+    o formato realmente disputado. Devolve p inalterado quando os formatos
+    coincidem ou quando o alvo é desconhecido."""
+    try:
+        target = int(target_best_of or 0)
+    except (TypeError, ValueError):
+        return float(p_series)
+    source = int(source_best_of or SERIES_REFERENCE_BEST_OF)
+    if target <= 1 or target == source:
+        return float(p_series)
+    q = series_map_probability(p_series, source)
+    return _v18_series_win_prob(0, 0, target, q, q)
 
 
 def match_analysis(a, b):
@@ -318,9 +389,12 @@ def api_match(a, b, best_of=None):
         if not bo and u["event_id"]:
             row=db_one("SELECT match_strategy_count FROM riot_events_v10 WHERE event_id=?",(u["event_id"],))
             if row:bo=row.get("match_strategy_count")
+        p_ref=p; p=convert_series_probability(p,bo)
         return {"team_a":ra,"team_b":rb,"probability_team_a":p,"probability_team_b":1-p,
-                "elo_probability_team_a":pe,"compact_probability_team_a":pc,
+                "elo_probability_team_a":convert_series_probability(pe,bo),
+                "compact_probability_team_a":pc,
                 "mode":u["prediction_mode"],"prediction_date":u["date"],"note":u["source"],
+                "best_of":bo,"probability_team_a_bo3_reference":p_ref,
                 "analysis":an,"scoreline":scoreline_probability(a,b,p,bo or 3)}
 
     s = db_one("""SELECT * FROM current_predictions WHERE
@@ -332,15 +406,20 @@ def api_match(a, b, best_of=None):
         pc=float(s["compact_probability_team_a"])
         if s["team_a"] != a:
             p,pe,pc = 1-p,1-pe,1-pc
+        p_ref=p; p=convert_series_probability(p,best_of)
         return {"team_a":ra,"team_b":rb,"probability_team_a":p,"probability_team_b":1-p,
-                "elo_probability_team_a":pe,"compact_probability_team_a":pc,
+                "elo_probability_team_a":convert_series_probability(pe,best_of),
+                "compact_probability_team_a":pc,
                 "mode":"saved_blend","prediction_date":s["date"],"note":s["note"],
+                "best_of":best_of,"probability_team_a_bo3_reference":p_ref,
                 "analysis":match_analysis(a,b),"scoreline":scoreline_probability(a,b,p,best_of or 3)}
 
-    p=elo_prob(ra["elo"],rb["elo"])
+    p_ref=elo_prob(ra["elo"],rb["elo"])
+    p=convert_series_probability(p_ref,best_of)
     return {"team_a":ra,"team_b":rb,"probability_team_a":p,"probability_team_b":1-p,
             "elo_probability_team_a":p,"compact_probability_team_a":None,
             "mode":"elo_fallback","prediction_date":None,"note":"Elo live fallback",
+            "best_of":best_of,"probability_team_a_bo3_reference":p_ref,
             "analysis":match_analysis(a,b),"scoreline":scoreline_probability(a,b,p,best_of or 3)}
 
 
@@ -369,13 +448,30 @@ class TableParser(HTMLParser):
             self.in_tr=False
 
 
+_CANON_TEAM_INDEX=None
+def _canon_team_index():
+    """Índice único de nome → tricode, normalizado (sem acento, minúsculo,
+    espaços colapsados). Antes canonical() só fazia comparação exata e por
+    caixa contra ALIASES, o que deixava passar as grafias do feed da Riot."""
+    global _CANON_TEAM_INDEX
+    if _CANON_TEAM_INDEX is None:
+        idx={}
+        for code,full in FULL_NAMES.items():
+            idx[_fold_name(code)]=code
+            idx[_fold_name(full)]=code
+        for name,code in ALIASES.items():
+            idx[_fold_name(name)]=code
+        for name,code in RIOT_TEAM_ALIASES.items():
+            idx[_fold_name(name)]=code
+        _CANON_TEAM_INDEX=idx
+    return _CANON_TEAM_INDEX
+
+
 def canonical(x):
     x=" ".join((x or "").split())
+    if not x: return None
     if x in ALIASES: return ALIASES[x]
-    low=x.lower()
-    for k,v in ALIASES.items():
-        if k.lower()==low: return v
-    return None
+    return _canon_team_index().get(_fold_name(x))
 
 
 
@@ -1258,14 +1354,31 @@ def _winner_from_event_game(event,game):
     return None
 
 
+def _winner_from_snapshot_v29(snap):
+    """Vencedor a partir do estado final do mapa, quando o EventDetails não
+    expõe o resultado por jogo (é o caso comum: `outcome` vem nulo). A ordem
+    inibidores → torres → ouro é decrescente em confiabilidade; nexus destruído
+    implica inibidor caído, e o ouro só desempata o que já é decidido."""
+    b=(snap or {}).get("blue") or {}; r=(snap or {}).get("red") or {}
+    for key in ("inhibitors","towers","gold"):
+        x,y=b.get(key),r.get(key)
+        if x is None or y is None or x==y: continue
+        side=b if x>y else r
+        return canonical(side.get("team")) or side.get("team")
+    return None
+
+
 def backfill_recent_riot_games_v10(limit_events=4):
     """Cache final draft/stats for recent completed LCK maps without aggressive crawling."""
-    rows=db_rows("""SELECT event_id FROM riot_events_v10
+    rows=db_rows("""SELECT event_id,start_time FROM riot_events_v10
                     WHERE lower(state) LIKE '%complete%'
                     ORDER BY start_time DESC LIMIT ?""",(int(limit_events),))
     fetched=0;errors=[]
     for row in rows:
         event_id=str(row["event_id"])
+        # O EventDetails devolve startTime nulo; o horário confiável é o que já
+        # foi gravado a partir do getSchedule.
+        event_start=row.get("start_time")
         try:
             ep=riot_get_event_details(event_id,"en-US")
             event=riot_event_from_details(ep)
@@ -1280,10 +1393,17 @@ def backfill_recent_riot_games_v10(limit_events=4):
                 existing=db_one("SELECT final_json FROM riot_games_v10 WHERE game_id=?",(str(gid),))
                 if existing and existing.get("final_json"):continue
                 try:
-                    snap=riot_fetch_game_snapshot(event_id,gid,0)
+                    try:
+                        snap=riot_fetch_game_snapshot(event_id,gid,0)
+                    except Exception:
+                        # Mapa antigo: 'agora' está fora da janela transmitida.
+                        # Localiza o frame final varrendo o dia do evento.
+                        ts=riot_locate_completed_game(gid,event.get("startTime") or event_start)
+                        if not ts: raise
+                        snap=riot_fetch_game_snapshot(event_id,gid,starting_time=ts)
                     snap["game_state"]="completed"
                     store_riot_snapshot_v10(snap)
-                    winner=_winner_from_event_game(event,game)
+                    winner=_winner_from_event_game(event,game) or _winner_from_snapshot_v29(snap)
                     with db_connect() as con:
                         con.execute("""UPDATE riot_games_v10 SET winner=?,state='completed',
                                       final_json=?,updated_at=? WHERE game_id=?""",
@@ -1301,6 +1421,17 @@ def backfill_recent_riot_games_v10(limit_events=4):
 
 
 
+def _draft_state_bulk_cutoff():
+    """Último dia já coberto pela importação em massa (Oracle's Elixir/gol.gg).
+
+    As agregações de draft são construídas a partir de `player_games`. Aplicar
+    por cima delas um mapa que aquela importação já contabilizou soma o mesmo
+    jogo duas vezes. O feed da Riot só deve avançar o estado a partir do dia
+    seguinte ao que a fonte em massa alcançou."""
+    row=db_one(f"SELECT MAX(date) AS d FROM player_games WHERE 1=1{LG_SQL}",LG_ARGS)
+    return str((row or {}).get("d") or "")[:10]
+
+
 def apply_completed_riot_series_to_draft_v10(event_id):
     """Advance draft feature state only after the whole series ends.
 
@@ -1308,13 +1439,24 @@ def apply_completed_riot_series_to_draft_v10(event_id):
     very map being evaluated. Under Fearless, same-series champion reuse is unavailable
     anyway; the completed series becomes training/state information for future matches.
     """
-    event=db_one("SELECT state FROM riot_events_v10 WHERE event_id=?",(str(event_id),))
+    event=db_one("SELECT state,start_time FROM riot_events_v10 WHERE event_id=?",(str(event_id),))
     if not event or "complete" not in str(event.get("state") or "").lower():return 0
+    cutoff=_draft_state_bulk_cutoff()
+    day=str(event.get("start_time") or "")[:10]
+    if cutoff and day and day<=cutoff:
+        # Série já contabilizada pela importação em massa.
+        return 0
     games=db_rows("""SELECT game_id,winner FROM riot_games_v10
                      WHERE event_id=? AND lower(state) LIKE '%complete%' AND winner IS NOT NULL
                      ORDER BY game_number""",(str(event_id),))
     applied=0
     with db_connect() as con:
+        # Sem row_factory as linhas voltam como tupla e o dict(r) abaixo estoura
+        # com ValueError. O defeito nunca apareceu porque o backfill de mapas
+        # concluídos estava quebrado (a lista vinha vazia) e a única chamada em
+        # archive_completed_series_v10 engolia a exceção — riot_draft_applied_v10
+        # tinha zero linhas.
+        con.row_factory=sqlite3.Row
         for g in games:
             gid=str(g["game_id"])
             if con.execute("SELECT 1 FROM riot_draft_applied_v10 WHERE game_id=?",(gid,)).fetchone():continue
@@ -1325,8 +1467,12 @@ def apply_completed_riot_series_to_draft_v10(event_id):
             if len(parts)<10:continue
             # player overall + player×champion + descriptive champion meta
             for x in parts:
-                player=x["player"];champ=canonical_champion_v10(x["champion"]);role=x["role"]
+                champ=canonical_champion_v10(x["champion"]);role=x["role"]
                 team=canonical(x["team"]) or x["team"]
+                # riot_participants_v10 guarda o nome como o feed manda,
+                # "BFX Clear". As tabelas de maestria são chaveadas por "Clear":
+                # usar o nome cru cria linha nova em vez de somar na existente.
+                player=canonical_player(_strip_team_prefix_v10(x["player"],team),team)
                 y=1 if team==winner else 0
                 prow=con.execute("SELECT wins,games FROM draft_player_overall WHERE player=?",(player,)).fetchone()
                 if prow:
@@ -1377,6 +1523,8 @@ def apply_completed_riot_series_to_draft_v10(event_id):
                         (gid,str(event_id),datetime.now(timezone.utc).isoformat(),"Applied after series completion"))
             applied+=1
         con.commit()
+    if applied:
+        invalidate_draft_reference_caches()
     return applied
 
 
@@ -1404,8 +1552,11 @@ def archive_completed_series_v10():
         if added:recalc_ratings(con)
         con.commit()
     for ev in events:
-        try:apply_completed_riot_series_to_draft_v10(ev["event_id"])
-        except Exception:pass
+        # Falha aqui não pode cancelar o arquivamento das outras séries, mas
+        # tem de aparecer: foi um `except: pass` neste ponto que escondeu por
+        # completo o defeito de row_factory acima.
+        _bg_step(f"Draft state apply {ev['event_id']}",
+                 apply_completed_riot_series_to_draft_v10,ev["event_id"])
     return added
 
 def try_auto_update():
@@ -1448,8 +1599,10 @@ def try_auto_update():
                 recalc_ratings(con)
             con.commit()
     except Exception as e:
-        # Intentionally silent: the app must remain usable offline.
-        pass
+        # Tolerante a falha de propósito (o app precisa funcionar offline), mas
+        # não silencioso: sem registro não há como saber que o gol.gg mudou de
+        # formato e os resultados pararam de entrar.
+        source_health("gol.gg result update","error",f"{type(e).__name__}: {e}")
 
 
 def recalc_ratings(con):
@@ -1515,23 +1668,38 @@ def _sigmoid(z):
     e=math.exp(z); return e/(1+e)
 
 
-def _draft_model_probability(elo_diff,mastery_diff,synergy_diff):
+@functools.lru_cache(maxsize=1)
+def _draft_model_params():
+    """A config do modelo é uma linha estática. Lê-la a cada chamada custava uma
+    conexão SQLite por simulação — 350 por evaluate_draft, ~13 mil por árvore de
+    draft. Use _draft_model_params.cache_clear() depois de reescrever a tabela."""
     cfg=db_one("SELECT * FROM draft_model_config_v8 LIMIT 1")
-    med=json.loads(cfg["medians_json"]); means=json.loads(cfg["means_json"])
-    scales=json.loads(cfg["scales_json"]); coef=json.loads(cfg["coef_json"])
+    if not cfg: raise RuntimeError("draft_model_config_v8 vazia")
+    return (json.loads(cfg["medians_json"]),json.loads(cfg["means_json"]),
+            json.loads(cfg["scales_json"]),json.loads(cfg["coef_json"]),
+            float(cfg["intercept"]))
+
+
+def _draft_model_probability(elo_diff,mastery_diff,synergy_diff):
+    med,means,scales,coef,intercept=_draft_model_params()
     vals=[elo_diff,mastery_diff,synergy_diff]
     vals=[med[i] if vals[i] is None else float(vals[i]) for i in range(3)]
-    z=float(cfg["intercept"])
+    z=intercept
     for i,v in enumerate(vals):
         z += coef[i]*((v-means[i])/scales[i])
     return _sigmoid(z)
 
 
+@functools.lru_cache(maxsize=4096)
 def _pc(player,champion,scope="local_2025_2026"):
     """Maestria do jogador no campeão. O mesmo jogador aparece em linhas
     separadas por time (quem trocou de equipe tem histórico dividido), então
     somamos os jogos: a experiência no campeão é dele, não do time. Métricas de
-    taxa entram como média ponderada por jogos."""
+    taxa entram como média ponderada por jogos.
+
+    Cacheado: a busca por draft repete o mesmo par jogador×campeão em centenas
+    de nós. Nenhum caller muta o dict devolvido — se algum passar a mutar, o
+    cache precisa devolver uma cópia."""
     if not champion: return None
     row=db_one("""SELECT player,champion,role,
                          SUM(games) AS games, SUM(wins) AS wins,
@@ -1551,6 +1719,7 @@ def _pc(player,champion,scope="local_2025_2026"):
     return row
 
 
+@functools.lru_cache(maxsize=1024)
 def _player_prior(player):
     row=db_one("SELECT * FROM draft_player_overall WHERE player=? LIMIT 1",(player,))
     return float(row["player_prior"]) if row else .5
@@ -1565,32 +1734,49 @@ def _eb_mastery(player,pcrow,strength=32.0):
     return alpha/(alpha+beta),n,alpha,beta
 
 
+@functools.lru_cache(maxsize=4096)
 def _career_pc(player,champion,scope="career"):
     if not champion: return None
     return db_one("""SELECT * FROM draft_player_champion_web
                      WHERE player=? AND champion=? AND scope=? LIMIT 1""",(player,champion,scope))
 
 
+@functools.lru_cache(maxsize=512)
 def _current_form(player):
     return db_one("SELECT * FROM draft_current_lck_player_form WHERE player=? LIMIT 1",(player,))
 
 
+@functools.lru_cache(maxsize=2048)
 def _meta(role,champion):
     if not champion: return None
     return db_one("""SELECT * FROM draft_champion_meta
                      WHERE scope='2026' AND role=? AND champion=? LIMIT 1""",(role,champion))
 
 
+@functools.lru_cache(maxsize=8192)
 def _syn(a,b):
     if not a or not b: return None
     x,y=sorted([a,b])
     return db_one("SELECT * FROM draft_synergy WHERE champion_a=? AND champion_b=? LIMIT 1",(x,y))
 
 
+@functools.lru_cache(maxsize=8192)
 def _counter(role,a,b):
     if not a or not b: return None
     return db_one("""SELECT * FROM draft_counter
                      WHERE role=? AND champion_a=? AND champion_b=? LIMIT 1""",(role,a,b))
+
+
+# Toda leitura de referência do draft é cacheada porque a busca minimax repete
+# os mesmos pares milhares de vezes. Quem escreve nessas tabelas precisa chamar
+# esta função — caso contrário o app serve agregações congeladas até reiniciar.
+_DRAFT_REFERENCE_CACHES=(_pc,_player_prior,_career_pc,_current_form,_meta,_syn,_counter)
+
+
+def invalidate_draft_reference_caches():
+    for fn in _DRAFT_REFERENCE_CACHES:
+        fn.cache_clear()
+    _draft_model_params.cache_clear()
 
 
 def _percentile(vals,q):
@@ -1712,6 +1898,8 @@ def refresh_draft_web_cache():
                     con.commit()
         except Exception as e:
             result["errors"].append(tournament+": "+str(e))
+    if result["updated"]:
+        invalidate_draft_reference_caches()
     result["ok"]=not bool(result["errors"])
     return result
 
@@ -4728,15 +4916,6 @@ def auto_draft_watch_v28(event_id):
 # ---------------------------------------------------------------------------
 # Live game drafts (multi-league discovery + draft capture)
 # ---------------------------------------------------------------------------
-RIOT_TEAM_ALIASES = {
-    "gen.g esports": "GEN",
-    "nongshim red force": "NS",
-    "nongshim redforce": "NS",
-    "dplus kia": "DK",
-    "hanwha life esports": "HLE",
-}
-RIOT_CONTEXT_ONLY_LEAGUES = {"lck challengers", "lck challengers league"}
-
 def _fold_name(x):
     s = unicodedata.normalize("NFKD", str(x or ""))
     s = "".join(c for c in s if not unicodedata.combining(c))
@@ -4842,6 +5021,14 @@ class Handler(BaseHTTPRequestHandler):
         # Keep the console clean.
         pass
 
+    @staticmethod
+    def qs_int(qs,key,default):
+        """?limit=abc não deve derrubar a requisição com 500."""
+        try:
+            return int((qs.get(key) or [str(default)])[0])
+        except (TypeError,ValueError):
+            return default
+
     def send_json(self,obj,status=200):
         body=json_bytes(obj)
         self.send_response(status)
@@ -4852,8 +5039,13 @@ class Handler(BaseHTTPRequestHandler):
         self.wfile.write(body)
 
     def send_file(self,path):
-        path=path.resolve()
-        if not str(path).startswith(str(STATIC.resolve())) or not path.is_file():
+        # relative_to em vez de startswith: comparar prefixos de string deixaria
+        # passar um diretório irmão chamado "static_algo".
+        try:
+            path=path.resolve(); path.relative_to(STATIC.resolve())
+        except ValueError:
+            self.send_error(404); return
+        if not path.is_file():
             self.send_error(404); return
         ctype=mimetypes.guess_type(str(path))[0] or "application/octet-stream"
         body=path.read_bytes()
@@ -4906,7 +5098,7 @@ class Handler(BaseHTTPRequestHandler):
         if path=="/api/v12/matches":
             qs=urllib.parse.parse_qs(parsed.query)
             status=(qs.get("status") or ["all"])[0]
-            limit=int((qs.get("limit") or ["500"])[0])
+            limit=self.qs_int(qs,"limit",500)
             self.send_json(v12_match_items(status,limit)); return
         if path=="/api/v12/match":
             qs=urllib.parse.parse_qs(parsed.query)
@@ -4916,14 +5108,14 @@ class Handler(BaseHTTPRequestHandler):
         if path=="/api/v12/players":
             qs=urllib.parse.parse_qs(parsed.query)
             self.send_json(v12_player_list((qs.get("team") or [None])[0],(qs.get("role") or [None])[0],
-                                           (qs.get("q") or [None])[0],int((qs.get("limit") or ["200"])[0]))); return
+                                           (qs.get("q") or [None])[0],self.qs_int(qs,"limit",200))); return
         if path=="/api/v12/player":
             qs=urllib.parse.parse_qs(parsed.query)
             self.send_json(v12_player_detail((qs.get("name") or [""])[0])); return
         if path=="/api/v12/champions":
             qs=urllib.parse.parse_qs(parsed.query)
             self.send_json(v12_champion_list((qs.get("role") or [None])[0],(qs.get("q") or [None])[0],
-                                             int((qs.get("limit") or ["250"])[0]))); return
+                                             self.qs_int(qs,"limit",250))); return
         if path=="/api/v12/champion":
             qs=urllib.parse.parse_qs(parsed.query)
             self.send_json(v12_champion_detail((qs.get("name") or [""])[0],(qs.get("role") or [None])[0])); return
@@ -4935,7 +5127,7 @@ class Handler(BaseHTTPRequestHandler):
             status=(qs.get("status") or ["all"])[0]
             team=(qs.get("team") or [None])[0]
             year=(qs.get("year") or [None])[0]
-            limit=int((qs.get("limit") or ["500"])[0])
+            limit=self.qs_int(qs,"limit",500)
             self.send_json(match_center_v11(status,team,year,limit)); return
         if path=="/api/match-center/detail":
             qs=urllib.parse.parse_qs(parsed.query)
@@ -5157,6 +5349,22 @@ class Handler(BaseHTTPRequestHandler):
             self.send_json({"detail":f"{type(e).__name__}: {e}"},500)
 
 
+def _bg_step(label,fn,*args):
+    """O laço de fundo não pode morrer por causa de uma etapa, mas engolir a
+    exceção em silêncio deixava o app servindo dados velhos sem nenhum sinal de
+    que parou de atualizar. Registra em source_registry_v10, que a UI já lê."""
+    try:
+        return fn(*args)
+    except Exception as e:
+        detail=f"{type(e).__name__}: {e}"
+        print(f"[bg] {label} falhou: {detail}")
+        try:
+            source_health(label,"error",detail)
+        except Exception:
+            pass
+        return None
+
+
 def background_updater():
     time.sleep(3)
     last_schedule=0.0
@@ -5169,18 +5377,15 @@ def background_updater():
     while True:
         now=time.time()
         if now-last_schedule>=RIOT_SCHEDULE_SECONDS:
-            refresh_riot_schedule_v10()
-            try:archive_completed_series_v10()
-            except Exception:pass
+            _bg_step("Riot schedule refresh",refresh_riot_schedule_v10)
+            _bg_step("Series archive",archive_completed_series_v10)
             last_schedule=now
         if now-last_discover>=RIOT_DISCOVER_SECONDS or not active_event:
-            ev=discover_lck_live_event_v10()
+            ev=_bg_step("Live event discovery",discover_lck_live_event_v10)
             active_event=str(ev["id"]) if ev else None
             if not active_event and _fallback_live_candidate_v27():
-                try:
-                    synced=sync_live_now_v27()
-                    active_event=str(synced.get("event_id")) if synced.get("event_id") else None
-                except Exception:pass
+                synced=_bg_step("Live sync fallback",sync_live_now_v27) or {}
+                active_event=str(synced.get("event_id")) if synced.get("event_id") else None
             last_discover=now
         if active_event and now-last_draft_watch>=DRAFT_WATCH_SECONDS:
             auto_draft_watch_v28(active_event)
@@ -5191,20 +5396,17 @@ def background_updater():
             if result.get("snapshot") and str((result["snapshot"].get("event_state") or "")).lower()=="completed":
                 active_event=None
         if now-last_gol>=3600:
-            try:try_auto_update()
-            except Exception:pass
+            _bg_step("gol.gg result update",try_auto_update)
             last_gol=now
         if now-last_backfill>=1800:
-            try:
-                backfill_recent_riot_games_v10(3)
-                v19_score_prospective()
-                v20_score_live_training()
-                v21_refresh_promotion_reviews()
-            except Exception:pass
+            # Etapas independentes: uma falha não deve cancelar as seguintes.
+            _bg_step("Riot completed-game backfill",backfill_recent_riot_games_v10,3)
+            _bg_step("V19 prospective scoring",v19_score_prospective)
+            _bg_step("V20 live training scoring",v20_score_live_training)
+            _bg_step("V21 promotion reviews",v21_refresh_promotion_reviews)
             last_backfill=now
         if now-last_draft>=21600:
-            try:refresh_draft_web_cache()
-            except Exception:pass
+            _bg_step("Draft web cache",refresh_draft_web_cache)
             last_draft=now
         time.sleep(5 if (active_event or _fallback_live_candidate_v27()) else 20)
 
