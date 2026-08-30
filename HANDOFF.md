@@ -95,3 +95,54 @@ Os ganhos sao pequenos e, fora o canal de duplas, nao atingem
 significancia formal com 447 jogos de teste. O padrao de 8/8 metricas
 melhorando e mais convincente que qualquer numero isolado, mas continua
 sendo indicio, nao prova.
+
+## Atualizacao — 2026-08-29: proximo passo executado
+
+Formalizados `champ_solo_diff`, `champ_pair_diff` e `matchup_diff` dentro
+de `build_dataset` (`scripts/run_validation_v19.py`), reaproveitando o
+filtro `MODEL_LEAGUES` ja existente (nao precisou de parametro novo).
+Quatro candidatos novos no `MODEL_SPECS`: `core_champ_solo`,
+`core_champ_pair`, `core_champ_matchup`, `core_champ_all`.
+
+**Bug encontrado e corrigido durante a integracao:** a funcao `smooth()`
+desempacotava a tupla armazenada `(games, wins)` em variaveis nomeadas
+`w,n` — invertendo os papeis na formula bayesiana `(wins+K/2)/(games+K)`.
+Isso destruia o sinal das tres features (alguns candidatos chegavam a ter
+correlacao NEGATIVA com a versao de referencia em
+`scripts/research/canais.py`). Corrigido; apos o fix os numeros batem
+exatamente com o `canais.py` (core+os tres, fonte LCK: log_loss 0.6164 ->
+0.6122, AUC 0.7036 -> 0.7120).
+
+Gate oficial rodado com `MODEL_LEAGUES=LCK EVAL_LEAGUES=LCK` (config de
+producao). Resultado gravado em `validation_experiments_v19` e
+`validation_freeze_v19`:
+
+| Candidato            | Veredito              | log_loss | Δ vs core |
+|-----------------------|------------------------|----------|-----------|
+| core_champ_solo       | INCONCLUSIVE           | 0.6146   | -0.0018   |
+| core_champ_pair       | RETROSPECTIVE_REJECT   | 0.6167   | +0.0002   |
+| core_champ_matchup    | INCONCLUSIVE           | 0.6148   | -0.0016   |
+| core_champ_all        | RETROSPECTIVE_SUPPORT  | 0.6122   | -0.0042   |
+
+Os quatro ficaram `FROZEN_AWAITING_PROSPECTIVE` em `validation_freeze_v19`
+(precisam de >=100 mapas e >=40 series futuras antes de promocao, regra
+ja existente no gate). Nenhum entrou em producao ainda — isso e
+decisao separada, pendente de validacao prospectiva.
+
+Ambiente: `.venv/` criado em `LCK_Predictor_V28_AUTO_DRAFT/` via
+`python3 -m venv .venv && .venv/bin/pip install -r requirements.txt`
+(o `runtime/` do handoff anterior era especifico do Windows e nao veio
+no upload para este Mac).
+
+Backup pre-run: `/tmp/lck_data_v1.sqlite.pre_champ_features.bak`.
+
+### Proximo passo sugerido (nao executado)
+
+Nenhuma acao de codigo pendente imediata. Op(c)oes para continuar:
+- Deixar `core_champ_all` acumular jogos/series futuras da LCK ate
+  bater o minimo do gate prospectivo (100 mapas / 40 series) e so
+  entao revisar promocao.
+- Se quiser reforcar a amostra dos canais de campeao com a LPL (o
+  "achado colateral" do handoff original), rodar de novo com
+  `MODEL_LEAGUES=LCK,LPL EVAL_LEAGUES=LCK` e comparar contra esta
+  baseline LCK-only.

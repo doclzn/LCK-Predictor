@@ -22,7 +22,12 @@ MODEL_SPECS={
     'core_pool_remaining': ['elo_diff','mastery_diff','synergy_diff','remaining_pool_diff'],
     'core_flex': ['elo_diff','mastery_diff','synergy_diff','flex_diff'],
     'core_pool_flex': ['elo_diff','mastery_diff','synergy_diff','pool_exhaustion_adv','flex_diff'],
+    'core_champ_solo': ['elo_diff','mastery_diff','synergy_diff','champ_solo_diff'],
+    'core_champ_pair': ['elo_diff','mastery_diff','synergy_diff','champ_pair_diff'],
+    'core_champ_matchup': ['elo_diff','mastery_diff','synergy_diff','matchup_diff'],
+    'core_champ_all': ['elo_diff','mastery_diff','synergy_diff','champ_solo_diff','champ_pair_diff','matchup_diff'],
 }
+K_CHAMP=10.0  # suavizacao bayesiana das taxas de vitoria por campeao, em direcao a 0.5
 
 def siglog(x):
     return 1/(1+math.exp(-max(-30,min(30,x))))
@@ -129,6 +134,24 @@ def build_dataset(con):
     elo_map=build_series_elo_map(con)
     pgroup={gid:g.copy() for gid,g in players.groupby('gameid')}
     overall={}; pc={}; player_champs=defaultdict(set); synergy={}; role_counts=defaultdict(lambda:defaultdict(int)); used_series=defaultdict(set)
+    champ_solo={}; champ_pair={}; champ_mu={}
+    def smooth(d,k):
+        g,w=d.get(k,(0.0,0.0))
+        return (w+K_CHAMP/2)/(g+K_CHAMP)
+    def solo_score(rc):
+        vals=[smooth(champ_solo,(r,rc[r])) for r in ROLES if r in rc]
+        return sum(vals)/len(vals) if vals else .5
+    def pair_score(rc):
+        chs=sorted(rc[r] for r in ROLES if r in rc)
+        vals=[smooth(champ_pair,tuple(sorted((a,b)))) for a,b in itertools.combinations(chs,2)]
+        return sum(vals)/len(vals) if vals else .5
+    def matchup_edge(rc_a,rc_b):
+        acc=0.0
+        for r in ROLES:
+            a,b=rc_a.get(r),rc_b.get(r)
+            if a is None or b is None: continue
+            acc += smooth(champ_mu,(r,a,b))-.5
+        return acc
     rows=[]
     for gid,tg in team.groupby('gameid',sort=False):
         if len(tg)!=2 or gid not in pgroup: continue
@@ -150,21 +173,25 @@ def build_dataset(con):
 
         bpg=pg[pg.side.str.lower()=='blue']; rpg=pg[pg.side.str.lower()=='red']
         def side_info(g):
-            prs={};champs=[]; mastery=[]
+            prs={};champs=[]; mastery=[]; rc={}
             for _,r in g.iterrows():
                 role=ROLE_ALIASES.get(str(r['position']).lower(),str(r['position']).lower())
                 if role not in ROLES:continue
                 player=str(r['playername']); champ=str(r['champion'])
-                prs[role]=player; champs.append(champ)
+                prs[role]=player; champs.append(champ); rc[role]=champ
                 mastery.append(eb(player,champ,overall,pc)[0])
             pairs=[]
             for a,b in itertools.combinations(champs,2):
                 k=tuple(sorted((a,b))); gg,ww=synergy.get(k,(0,0));pairs.append((ww+2)/(gg+4))
             syn=sum(pairs)/len(pairs) if pairs else .5
             flex=sum(flex_score(c,role_counts) for c in champs)/len(champs) if champs else 0.0
-            return prs,champs,(sum(mastery)/len(mastery) if mastery else .5),syn,flex
-        bplayers,bchamps,bmaster,bsyn,bflex=side_info(bpg)
-        rplayers,rchamps,rmaster,rsyn,rflex=side_info(rpg)
+            return prs,champs,rc,(sum(mastery)/len(mastery) if mastery else .5),syn,flex
+        bplayers,bchamps,brc,bmaster,bsyn,bflex=side_info(bpg)
+        rplayers,rchamps,rrc,rmaster,rsyn,rflex=side_info(rpg)
+
+        champ_solo_diff=solo_score(brc)-solo_score(rrc)
+        champ_pair_diff=pair_score(brc)-pair_score(rrc)
+        matchup_diff=matchup_edge(brc,rrc)
 
         excluded=set(used_series[series_key])
         bpool,bcover=pool_team(bplayers,excluded,overall,pc,player_champs)
@@ -184,6 +211,7 @@ def build_dataset(con):
             'flex_diff':bflex-rflex,
             'pool_coverage_blue':bcover,'pool_coverage_red':rcover,
             'used_champions_before':len(excluded),
+            'champ_solo_diff':champ_solo_diff,'champ_pair_diff':champ_pair_diff,'matchup_diff':matchup_diff,
         })
 
         # Update state only after feature capture.
@@ -197,6 +225,21 @@ def build_dataset(con):
             win=int(sideg.iloc[0]['result'])
             for a,b in itertools.combinations(champs,2):
                 k=tuple(sorted((a,b)));g,w=synergy.get(k,(0,0));synergy[k]=(g+1,w+win)
+        for r in ROLES:
+            ch=brc.get(r)
+            if ch is not None:
+                g,w=champ_solo.get((r,ch),(0,0));champ_solo[(r,ch)]=(g+1,w+y)
+            ch=rrc.get(r)
+            if ch is not None:
+                g,w=champ_solo.get((r,ch),(0,0));champ_solo[(r,ch)]=(g+1,w+(1-y))
+        for chs,win in ((bchamps,y),(rchamps,1-y)):
+            for a,b in itertools.combinations(sorted(chs),2):
+                k=(a,b);g,w=champ_pair.get(k,(0,0));champ_pair[k]=(g+1,w+win)
+        for r in ROLES:
+            a,b=brc.get(r),rrc.get(r)
+            if a is None or b is None: continue
+            g,w=champ_mu.get((r,a,b),(0,0));champ_mu[(r,a,b)]=(g+1,w+y)
+            g,w=champ_mu.get((r,b,a),(0,0));champ_mu[(r,b,a)]=(g+1,w+(1-y))
         used_series[series_key].update(bchamps);used_series[series_key].update(rchamps)
     df=pd.DataFrame(rows).sort_values(['date','gameid']).reset_index(drop=True)
     return df
@@ -294,10 +337,12 @@ def run(db=DB):
         frozen[name]['C']=tuned[name]['best']['C']
 
     con.executescript('''
+    DROP TABLE IF EXISTS validation_dataset_v19;
     CREATE TABLE IF NOT EXISTS validation_dataset_v19(
       gameid TEXT PRIMARY KEY,date TEXT,year INTEGER,series_key TEXT,game_number INTEGER,blue_team TEXT,red_team TEXT,y INTEGER,
       elo_diff REAL,mastery_diff REAL,synergy_diff REAL,remaining_pool_diff REAL,pool_exhaustion_adv REAL,
-      blue_pool_loss REAL,red_pool_loss REAL,flex_diff REAL,pool_coverage_blue INTEGER,pool_coverage_red INTEGER,used_champions_before INTEGER);
+      blue_pool_loss REAL,red_pool_loss REAL,flex_diff REAL,pool_coverage_blue INTEGER,pool_coverage_red INTEGER,used_champions_before INTEGER,
+      champ_solo_diff REAL,champ_pair_diff REAL,matchup_diff REAL);
     CREATE TABLE IF NOT EXISTS validation_experiments_v19(
       candidate TEXT PRIMARY KEY,features_json TEXT,selected_c REAL,cv2025_log_loss REAL,cv2025_brier REAL,
       eval2026_accuracy REAL,eval2026_log_loss REAL,eval2026_brier REAL,eval2026_auc REAL,eval2026_ece REAL,
@@ -317,7 +362,7 @@ def run(db=DB):
       delta_log_loss_vs_core REAL,delta_brier_vs_core REAL,bootstrap_json TEXT,gate_status TEXT,updated_at TEXT);
     ''')
     con.execute('DELETE FROM validation_dataset_v19')
-    cols=['gameid','date','year','series_key','game_number','blue_team','red_team','y','elo_diff','mastery_diff','synergy_diff','remaining_pool_diff','pool_exhaustion_adv','blue_pool_loss','red_pool_loss','flex_diff','pool_coverage_blue','pool_coverage_red','used_champions_before']
+    cols=['gameid','date','year','series_key','game_number','blue_team','red_team','y','elo_diff','mastery_diff','synergy_diff','remaining_pool_diff','pool_exhaustion_adv','blue_pool_loss','red_pool_loss','flex_diff','pool_coverage_blue','pool_coverage_red','used_champions_before','champ_solo_diff','champ_pair_diff','matchup_diff']
     con.executemany('INSERT INTO validation_dataset_v19 VALUES('+','.join('?' for _ in cols)+')',[tuple(None if pd.isna(r[c]) else r[c] for c in cols) for _,r in df.iterrows()])
     con.execute('DELETE FROM validation_experiments_v19')
     for name,features in MODEL_SPECS.items():
