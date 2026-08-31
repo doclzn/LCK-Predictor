@@ -1,0 +1,87 @@
+/* ==========================================================================
+   TOKENS — fonte unica de verdade do tema.
+
+   Este e o UNICO arquivo do projeto que pode conter `:root`. Os valores aqui
+   sao exatamente os que ja venciam a cascata antes da unificacao; nada mudou
+   de aparencia ao consolidar. Para mudar a aparencia, mude AQUI, nao com um
+   override no fim da cascata.
+   ========================================================================== */
+
+:root{
+  /* --- Superficies (V32) --- */
+  --bg:#0a0a0d;
+  --surface:#141417;
+  --surface2:#1a1a1f;
+  --surface3:#222229;
+  --line:rgba(255,255,255,.08);
+
+  /* --- Texto (V32) --- */
+  --text:#eef0f3;
+  --muted:#8b8d97;
+  --soft:#c2c4cc;
+
+  /* --- Marca: roxo de acao + ciano reservado a numeros de modelo (V34) --- */
+  --accent:#8452f6;
+  --accent2:#b298ff;
+  --data:#22d3ee;
+  --data2:#67e8f9;
+
+  /* --- Cores semanticas (V29) --- */
+  --green:#2fd08c;
+  --red:#ff5d73;
+  --amber:#ffb454;
+  --blue:#4f8dff;
+
+  /* --- Elevacao ---
+     ATENCAO: `none` veio da V36 (topnav), que so mexeu no tema escuro. O tema
+     claro abaixo ainda tem sombra real. A assimetria e provavelmente acidental
+     e esta preservada aqui so para nao alterar o render nesta etapa. */
+  --shadow:none;
+
+  /* --- Raios --- */
+  --r:18px;
+  --r-sm:10px;
+  --r-md:14px;
+  --r-lg:20px;
+  --r-xl:26px;
+
+  /* --- Movimento --- */
+  --ease:cubic-bezier(.2,.7,.3,1);
+
+  /* --- Escala tipografica legada (V22 / V25) ---
+     Consumida por html[data-ui-scale=...] e pelas regras de acessibilidade
+     em 07-legacy-ux-history.css. */
+  --ui-font-base:18px;
+  --ui-font-small:15px;
+  --ui-font-label:14px;
+  --ui-font-body:18px;
+  --ui-font-title:32px;
+  --ui-zoom:1;
+  --v25-text:20px;
+  --v25-secondary:17px;
+  --v25-small:16px;
+}
+
+:root[data-theme="light"]{
+  --bg:#f6f6f8;
+  --surface:#fff;
+  --surface2:#f5f5f7;
+  --surface3:#ececef;
+  --line:rgba(15,15,20,.09);
+
+  --text:#131417;
+  --muted:#75767f;
+  --soft:#3d3e46;
+
+  --accent:#6d2fe0;
+  --accent2:#8452f6;
+  --data:#0891b2;
+  --data2:#0e7490;
+
+  --green:#0fa968;
+  --red:#e5484d;
+  --amber:#b97d10;
+  --blue:#2f6fed;
+
+  --shadow:0 1px 1px rgba(20,30,55,.04),0 14px 30px rgba(20,30,55,.09);
+}

@@ -5,18 +5,6 @@
    Google, WhatsApp). Hierarquia tipográfica real, mais respiro, superfícies
    suaves, accent único e bottom-tab no mobile. Sobrepõe os estilos acima.
    ========================================================================== */
-:root{
-  --bg:#0b0e13;--surface:#141821;--surface2:#1a1f2b;--surface3:#222836;--line:rgba(255,255,255,.08);
-  --text:#f7f8fa;--muted:#9aa3b2;--soft:#c6cdd9;--accent:#4f8dff;--accent2:#82b1ff;
-  --green:#2fd08c;--red:#ff5d73;--amber:#ffb454;--blue:#4f8dff;
-  --shadow:0 1px 2px rgba(0,0,0,.28),0 12px 32px rgba(0,0,0,.20);--r:18px;
-}
-:root[data-theme="light"]{
-  --bg:#f7f8fa;--surface:#fff;--surface2:#f1f3f7;--surface3:#e8ebf1;--line:rgba(16,24,40,.08);
-  --text:#0e1116;--muted:#69707d;--soft:#3f4653;--accent:#2f6fed;--accent2:#2f6fed;
-  --green:#0fa968;--red:#e5484d;--amber:#b97d10;--blue:#2f6fed;
-  --shadow:0 1px 2px rgba(20,30,55,.05),0 12px 28px rgba(20,30,55,.07);
-}
 html{font-size:16px}
 body{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;letter-spacing:-.1px}
 
@@ -33,23 +21,17 @@ body{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;letter
   border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);
   background:var(--surface);
 }
-.hero-match{border-radius:22px}
 .panel{padding:16px}
 .stat-row>div,.draft-lines>div,.why-grid>div,.prediction-compare>div,.score-outcomes>div,
-.patch-strip>div,.model-layer-grid>div{background:var(--surface2);border-radius:12px}
+.patch-strip>div,.model-layer-grid>div{background:var(--surface2)}
 
 /* Controles: pills e foco claro */
-.icon-btn,.ghost-btn,.soft-btn,.back-link,.tabs button,.empty-panel button,
-.draft-launcher button,.legacy-transition button,.link-panel button,.live-callout button{border-radius:999px}
 .tabs{gap:6px}.tabs button{border-color:transparent;background:var(--surface2);padding:8px 14px}
 .tabs button.active{background:var(--text);color:var(--bg);border-color:transparent;font-weight:800}
-.primary-nav button{border-radius:12px}
-.primary-nav button.active{background:color-mix(in srgb,var(--accent) 16%,transparent);color:var(--accent2);box-shadow:none}
-.row-status,.phase{border-radius:999px;border-color:transparent;font-size:12px}
+.row-status,.phase{border-color:transparent;font-size:12px}
 
 /* Topbar mais limpa */
 .app-topbar{height:60px;backdrop-filter:blur(18px);background:color-mix(in srgb,var(--bg) 86%,transparent)}
-.crumb{font-size:13px;letter-spacing:.2px}
 .version-proof{font-size:11px;color:var(--muted);letter-spacing:.4px}
 
 /* Desktop: trilho lateral mais leve */

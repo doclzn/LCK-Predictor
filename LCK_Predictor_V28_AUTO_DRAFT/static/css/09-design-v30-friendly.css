@@ -7,9 +7,6 @@
    inspirada em Uber / Google Maps / WhatsApp / Instagram.
    ========================================================================== */
 html,body{font-family:"Inter",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
-:root{--r-sm:10px;--r-md:14px;--r-lg:20px;--r-xl:26px;--ease:cubic-bezier(.2,.7,.3,1)}
-:root{--accent:#3d7dfd;--accent2:#6fa1ff}
-:root[data-theme="light"]{--accent:#2f68e0;--accent2:#3d7dfd}
 
 /* --- Fix: ícone de time sobrepondo o nome nos rankings --- */
 .mini-ranking button{grid-template-columns:20px 50px 1fr auto;gap:10px}
@@ -19,15 +16,6 @@ html,body{font-family:"Inter",ui-sans-serif,system-ui,-apple-system,"Segoe UI",s
 .roster-grid,.specialists{row-gap:10px}
 
 /* --- Superfícies: cantos generosos + sombra suave em camadas --- */
-.panel,.hero-match,.feature-card,.empty-panel,.trust-strip,.match-identity,
-.entity-card,.champ-card,.team-card,.game-card,.explain-box,.live-callout,
-.schedule-status-v23,.match-center-panel,.auto-draft-v28{border-radius:var(--r-lg)}
-.hero-match{border-radius:var(--r-xl)}
-.stat-row>div,.draft-lines>div,.why-grid>div,.prediction-compare>div,.score-outcomes>div,
-.patch-strip>div,.model-layer-grid>div,.forecast-ribbon>div,.live-team-box,.strategy-context-card,
-.draft-lock-count,.auto-draft-picks-v28>div,.auto-draft-model-v28,.live-draft-side-v28>div{border-radius:var(--r-md)}
-.team-mark{border-radius:18px}
-.team-mark.small{border-radius:13px}
 
 /* --- Botões: pílula, peso visual claro, feedback ao toque --- */
 button{transition:transform .15s var(--ease),box-shadow .15s var(--ease),background-color .15s var(--ease),border-color .15s var(--ease),opacity .15s var(--ease)}
@@ -43,7 +31,7 @@ button{transition:transform .15s var(--ease),box-shadow .15s var(--ease),backgro
 .schedule-status-v23 button:hover{transform:translateY(-1px)}
 .hero-match>button:active,.draft-launcher button:active,.link-panel button:active,
 .schedule-status-v23 button:active{transform:translateY(0) scale(.98)}
-.primary-nav button{border-radius:999px;transition:background-color .15s var(--ease),color .15s var(--ease)}
+.primary-nav button{transition:background-color .15s var(--ease),color .15s var(--ease)}
 .tabs button{border-radius:999px}
 
 /* --- Cards e linhas: leve elevação no hover, como listas de apps nativos --- */
@@ -54,8 +42,7 @@ button{transition:transform .15s var(--ease),box-shadow .15s var(--ease),backgro
 .hero-match:hover{transform:translateY(-2px)}
 
 /* --- Nav lateral: marca e item ativo mais amigáveis --- */
-.product-mark .mark{border-radius:12px;box-shadow:0 6px 16px color-mix(in srgb,var(--accent) 35%,transparent)}
-.primary-nav button.active{background:color-mix(in srgb,var(--accent) 14%,transparent);color:var(--accent)}
+.product-mark .mark{box-shadow:0 6px 16px color-mix(in srgb,var(--accent) 35%,transparent)}
 .primary-nav button:hover:not(.active){background:var(--surface2)}
 
 /* --- Topbar: menos "debug", mais produto --- */

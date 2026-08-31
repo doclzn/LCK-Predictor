@@ -8,14 +8,6 @@
    O resto da UI (botões, links, nav) usa o roxo como accent normal — o
    ciano nunca vira cor de ação, só de leitura, pra não perder significado.
    ========================================================================== */
-:root{
-  --accent:#8452f6;--accent2:#b298ff;
-  --data:#22d3ee;--data2:#67e8f9;
-}
-:root[data-theme="light"]{
-  --accent:#6d2fe0;--accent2:#8452f6;
-  --data:#0891b2;--data2:#0e7490;
-}
 
 /* Marca: gradiente roxo -> ciano no monograma, em vez de tom único genérico */
 .product-mark .mark{background:linear-gradient(135deg,var(--accent),var(--data))}

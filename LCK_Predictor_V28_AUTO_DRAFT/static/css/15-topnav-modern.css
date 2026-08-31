@@ -57,7 +57,6 @@
 .nav-foot #crumb,.nav-foot #versionProof{display:none}
 
 /* --- Painéis/cards: menos "caixa", mais superfície contínua --- */
-:root{--shadow:none}
 .panel,.hero-match,.trust-strip,.match-center-panel,.recent-panel,.ranking-panel{
   border:1px solid color-mix(in srgb,var(--line) 55%,transparent);
   background:color-mix(in srgb,var(--surface) 45%,var(--bg) 55%);

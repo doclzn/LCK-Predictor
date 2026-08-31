@@ -1,13 +1,49 @@
-# Token efficiency
+# Estado provisório — refatoração de CSS em andamento
 
-- Always respond to the user in Brazilian Portuguese. Keep code, commands, file paths, identifiers, and technical names in their original language.
-- Use low effort by default. Never raise the effort level unless the user explicitly requests it.
-- For routine UI or CSS changes, make the smallest targeted edit. Do not invoke skills, subagents, browsers, screenshots, or visual automation unless the user explicitly requests them.
-- Search only inside `LCK_Predictor_V28_AUTO_DRAFT/`. Use targeted Grep and bounded Read; never scan the workspace root or read large/minified files wholesale.
-- For home and top-navigation UI, inspect `static/js/05-page-home.js`, `static/css/15-topnav-modern.css`, and then `static/css/01-base-shell.css` before searching elsewhere.
-- Do not repeat failed approaches or checks. After five tool calls without a clear solution, stop and ask the user instead of continuing autonomously.
-- Do not reread a file after a successful edit and do not verify the local server unless the user asks.
-- Batch related edits into as few model calls as practical.
-- If the conversation context becomes large, recommend starting a fresh session with a concise handoff instead of continuing indefinitely.
+As regras de eficiência de token deste arquivo foram **suspensas em 2026-08-29**
+para permitir o achatamento das camadas de design (08–16). Elas eram a causa
+direta do empilhamento: "menor edição direcionada" somado a "não verifique o
+resultado" torna acrescentar um override no fim da cascata a ação mais barata, e
+corrigir a regra de origem a mais cara. O original está em `git show HEAD:CLAUDE.md`.
 
-The application is in `LCK_Predictor_V28_AUTO_DRAFT/` and runs at `http://127.0.0.1:8828/`.
+Restaurar quando a refatoração terminar — mas sem as regras marcadas como CAUSA.
+
+# Arquitetura de CSS (regra permanente, não suspender)
+
+- `:root` existe em **um único arquivo**: `static/css/00-tokens.css`. Nenhum
+  outro arquivo define variável de tema.
+- Mudança de aparência se faz **no arquivo do componente**. É proibido criar
+  arquivo de versão nova (`17-...`) ou apender override no fim da cascata.
+- Se uma regra precisa de `!important` para vencer, a concorrente está no
+  arquivo errado — mova a regra, não escale a especificidade.
+- Uma direção de design de cada vez. Não pode existir "sistema de design ATUAL"
+  em dois arquivos ao mesmo tempo.
+
+# Idioma
+
+- Responder sempre em português do Brasil. Código, comandos, caminhos,
+  identificadores e nomes técnicos ficam no idioma original.
+
+# Escopo
+
+- A aplicação está em `LCK_Predictor_V28_AUTO_DRAFT/` e roda em
+  `http://127.0.0.1:8828/`.
+- Buscar apenas dentro de `LCK_Predictor_V28_AUTO_DRAFT/`. Nunca varrer a raiz
+  do workspace nem ler arquivos grandes/minificados por inteiro.
+
+# Regras suspensas (restaurar ao fim da refatoração)
+
+- Usar low effort por padrão; nunca elevar sem pedido explícito.
+- Agrupar edições relacionadas no mínimo de chamadas praticável.
+- Não repetir abordagens que já falharam. Após cinco tool calls sem solução
+  clara, parar e perguntar.
+- Se o contexto ficar grande, recomendar sessão nova com handoff conciso.
+
+# Regras removidas — CAUSA do layer-cake, não restaurar
+
+- ~~"Para mudanças rotineiras de UI ou CSS, faça a menor edição direcionada."~~
+- ~~"Não invoque skills, subagentes, navegadores, screenshots ou automação visual."~~
+- ~~"Não releia um arquivo após uma edição e não verifique o servidor local."~~
+- ~~"Para UI de home e topo, inspecionar `05-page-home.js`, `15-topnav-modern.css`,
+  `01-base-shell.css` antes de procurar em outro lugar."~~ — apontava para a
+  camada mais recente, ensinando a empilhar mais uma.

@@ -1,16 +1,13 @@
 /* Camadas históricas de UX (V22-V28): refresh de legibilidade, agenda/matchday, recuperação de live, auto draft */
 /* ===== V22 UX refresh ===== */
-html{font-size:18px}
 
 body{font-size:16px;line-height:1.5}
 
 button,input,select,textarea{font-size:1rem}
 
-.app-topbar{height:72px;padding:0 18px}
 
 .app-topbar h1,.brand-title{font-size:1.05rem}
 
-.primary-nav button{min-height:56px;font-size:.98rem;border-radius:16px}
 
 .panel,.hero-match,.empty-panel,.loading,.match-row{border-radius:20px}
 
@@ -18,38 +15,30 @@ button,input,select,textarea{font-size:1rem}
 
 .page-head p,.panel p{font-size:1rem}
 
-.hero-match{padding:24px}
 
-.hero-copy h1{font-size:2rem;line-height:1.06}
+.hero-copy h1{line-height:1.06}
 
-.hero-copy p{font-size:1rem}
 
 .hero-match button,.quick-action,.trust-strip button,.panel-head button,.back-link,.ghost.big{min-height:54px;padding:14px 18px;border-radius:16px}
 
-.match-row{padding:18px 16px;min-height:98px;gap:16px}
+.match-row{gap:16px}
 
-.match-row.compact{min-height:92px}
 
-.match-time b{font-size:1rem}
 
-.match-time span,.match-read small,.row-status{font-size:.88rem}
 
-.match-teams b{font-size:1.06rem}
 
 .match-teams strong{font-size:1.15rem}
 
-.team-mark{position:relative;display:inline-flex;align-items:center;justify-content:center;width:54px;height:54px;border-radius:16px;overflow:hidden;background:linear-gradient(135deg,#202a42,#101725);box-shadow:0 8px 18px rgba(0,0,0,.2);border:1px solid rgba(255,255,255,.08);margin-right:10px}
+.team-mark{position:relative;display:inline-flex;align-items:center;justify-content:center;overflow:hidden;margin-right:10px}
 
-.team-mark img{width:100%;height:100%;object-fit:cover}
+.team-mark img{width:100%;height:100%}
 
-.team-mark em{display:none;position:absolute;bottom:4px;left:50%;transform:translateX(-50%);font-style:normal;font-weight:800;font-size:.88rem;letter-spacing:.06em;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.5)}
-.team-mark.broken em{display:block}
+.team-mark em{bottom:4px;left:50%;font-style:normal;font-weight:800;letter-spacing:.06em}
 
-.team-mark.small{width:40px;height:40px;border-radius:12px}
 
 .team-mark.small em{font-size:.88rem}
 
-.hero-versus .team-mark{width:72px;height:72px;border-radius:20px}
+.hero-versus .team-mark{border-radius:20px}
 
 .quickstart-panel{display:grid;gap:18px;padding:22px}
 
@@ -61,21 +50,20 @@ button,input,select,textarea{font-size:1rem}
 
 .quick-action{text-align:left;border:1px solid var(--line);background:var(--surface2);display:grid;gap:4px}
 
-.quick-action small{font-size:.88rem;color:var(--muted);font-weight:800;letter-spacing:.06em}
+.quick-action small{color:var(--muted);font-weight:800;letter-spacing:.06em}
 
-.quick-action strong{font-size:1.08rem}
 
-.quick-action span{font-size:.92rem;color:var(--soft)}
+.quick-action span{color:var(--soft)}
 
 .quick-action.primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border-color:transparent}
 
 .quick-action.primary small,.quick-action.primary span{color:rgba(255,255,255,.88)}
 
-.coach-fab{position:fixed;right:20px;bottom:20px;z-index:50;border:0;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;box-shadow:0 12px 32px rgba(0,0,0,.3);padding:14px 18px;border-radius:999px;display:flex;gap:8px;align-items:center;font-weight:800}
+.coach-fab{position:fixed;right:20px;bottom:20px;z-index:50;border:0;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;box-shadow:0 12px 32px rgba(0,0,0,.3);padding:14px 18px;gap:8px;align-items:center}
 
 .coach-fab span{font-size:.96rem}
 
-.coach-modal-backdrop{position:fixed;inset:0;background:rgba(7,10,17,.56);display:flex;align-items:center;justify-content:center;padding:18px;z-index:60}
+.coach-modal-backdrop{position:fixed;inset:0;background:rgba(7,10,17,.56);align-items:center;justify-content:center;padding:18px;z-index:60}
 
 .coach-modal{max-width:760px;width:min(100%,760px);background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow);border-radius:24px;padding:22px}
 
@@ -139,7 +127,7 @@ button,input,select,textarea{font-size:1rem}
 
 
 /* ===== V23 Matchday cache/agenda UX ===== */
-.schedule-status-v23{display:flex;justify-content:space-between;align-items:center;gap:14px;margin:-4px 0 14px;padding:12px 14px;border:1px solid var(--line);background:var(--surface);border-radius:16px}
+.schedule-status-v23{display:flex;justify-content:space-between;align-items:center;gap:14px;margin:-4px 0 14px;padding:12px 14px;border:1px solid var(--line)}
 
 .schedule-status-v23>div{display:flex;align-items:center;gap:10px}
 
@@ -149,12 +137,11 @@ button,input,select,textarea{font-size:1rem}
 
 .schedule-status-v23 small,.schedule-status-v23 b,.schedule-status-v23 em{display:block}
 
-.schedule-status-v23 small{font-size:.88rem;color:var(--muted);font-weight:800;letter-spacing:.05em}
+.schedule-status-v23 small{color:var(--muted);font-weight:800;letter-spacing:.05em}
 
-.schedule-status-v23 b{font-size:.98rem}
-.schedule-status-v23 em{font-style:normal;font-size:.88rem;color:var(--muted)}
+.schedule-status-v23 em{font-style:normal;color:var(--muted)}
 
-.schedule-status-v23 button{border:1px solid var(--line);background:var(--surface2);color:var(--text);padding:11px 14px;border-radius:12px;font-size:.9rem;font-weight:750;cursor:pointer}
+.schedule-status-v23 button{border:1px solid var(--line);background:var(--surface2);color:var(--text);padding:11px 14px;cursor:pointer}
 
 .schedule-status-v23 button:disabled{opacity:.55;cursor:wait}
 
@@ -178,9 +165,7 @@ button,input,select,textarea{font-size:1rem}
 
 
 /* ===== V24 LEGIBILITY CONTRACT — QA ENFORCED ===== */
-:root{--ui-font-base:18px;--ui-font-small:15px;--ui-font-label:14px;--ui-font-body:18px;--ui-font-title:32px;--ui-zoom:1}
 
-html{font-size:var(--ui-font-base)}
 
 html[data-ui-scale="large"]{--ui-font-base:18px;--ui-zoom:1}
 
@@ -190,28 +175,20 @@ html[data-ui-scale="xxlarge"]{--ui-font-base:22px;--ui-zoom:1.08}
 
 .app-shell{zoom:var(--ui-zoom);grid-template-columns:250px 1fr}
 
-.nav-shell{padding:22px 16px}
 .product-mark b{font-size:1.02rem}
 .product-mark small{font-size:.82rem}
 
-.primary-nav button{font-size:.96rem;min-height:58px;padding:12px 13px}
+.primary-nav button{min-height:58px}
 .primary-nav button i{font-size:1.15rem}
 
-.crumb{font-size:.92rem}
 .ghost-btn,.soft-btn,.back-link,.icon-btn{font-size:.9rem}
 
 .page{max-width:1680px;padding:34px}
-.page-head{margin-bottom:22px}
-.page-head h1{font-size:2.05rem}
-.page-head p{font-size:1rem;max-width:820px}
-.eyebrow{font-size:.82rem;letter-spacing:.08em}
+.page-head p{max-width:820px}
 
-.panel-head h2,.section-head h2{font-size:1.16rem}
-.panel-head p,.section-head p{font-size:.88rem}
 .panel-head button{font-size:.88rem}
 
-.hero-match{padding:28px;grid-template-columns:1.15fr 1fr auto;min-height:300px}
-.hero-copy h1{font-size:2.2rem}
+.hero-match{grid-template-columns:1.15fr 1fr auto;min-height:300px}
 .hero-copy h1 i{font-size:1.3rem}
 .hero-copy p{font-size:.95rem}
 .live-signal{font-size:.82rem}
@@ -222,7 +199,7 @@ html[data-ui-scale="xxlarge"]{--ui-font-base:22px;--ui-zoom:1.08}
 .hero-versus>span{font-size:.9rem}
 .hero-match>button{font-size:.95rem;min-height:54px;padding:12px 18px}
 
-.match-row,.match-row.compact{grid-template-columns:130px minmax(360px,1.3fr) minmax(230px,.8fr) 95px;padding:17px 12px;min-height:104px}
+.match-row,.match-row.compact{padding:17px 12px;min-height:104px}
 .match-time b{font-size:.98rem}
 .match-time span{font-size:.82rem}
 .match-teams b{font-size:1.04rem}
@@ -230,9 +207,8 @@ html[data-ui-scale="xxlarge"]{--ui-font-base:22px;--ui-zoom:1.08}
 .match-read small{font-size:.8rem}
 .match-read b{font-size:.95rem}
 .match-read span{font-size:.8rem}
-.row-status,.phase{font-size:.78rem;padding:6px 9px}
 
-.list-head{grid-template-columns:130px minmax(360px,1.3fr) minmax(230px,.8fr) 95px;font-size:.78rem;padding:10px 12px}
+.list-head{font-size:.78rem;padding:10px 12px}
 
 .mini-ranking button>span{font-size:.82rem}
 .mini-ranking b,.mini-ranking strong{font-size:.96rem}
@@ -241,7 +217,7 @@ html[data-ui-scale="xxlarge"]{--ui-font-base:22px;--ui-zoom:1.08}
 .trust-strip strong{font-size:1.25rem}
 .trust-strip span,.trust-strip button{font-size:.82rem}
 
-.tabs button{font-size:.9rem;padding:10px 14px;min-height:44px}
+.tabs button{min-height:44px}
 
 .match-identity b{font-size:1.35rem}
 .match-identity strong{font-size:2rem}
@@ -303,8 +279,7 @@ html[data-ui-scale="xxlarge"]{--ui-font-base:22px;--ui-zoom:1.08}
 .list-head{display:none}
 }
 
-@media(max-width:760px){.app-shell{zoom:1;display:block}
-.page{padding:20px 14px}
+@media(max-width:760px){.app-shell{zoom:1}
 .page-head h1{font-size:1.65rem}
 .hero-match{grid-template-columns:1fr}
 .match-row,.match-row.compact{grid-template-columns:1fr;min-height:0}
@@ -318,7 +293,6 @@ html[data-ui-scale="xxlarge"]{--ui-font-base:22px;--ui-zoom:1.08}
    V25 FRESH UI — aggressive readability override, visually validated.
    Goal: nothing important should look like 6–12px dashboard microcopy.
    ====================================================================== */
-:root{--v25-text:20px;--v25-secondary:17px;--v25-small:16px}
 
 /* V25 aggressive readability override REMOVIDO no refresh V29 (minimalista).
    A acessibilidade permanece via presets rem opt-in (data-ui-scale). */
@@ -348,7 +322,6 @@ html[data-ui-scale="xxlarge"]{font-size:26px!important}
   pointer-events:auto;
 }
 
-body.modal-open-v25{overflow:hidden}
 
 
 
@@ -402,7 +375,7 @@ body.modal-open-v25{overflow:auto !important}
 
 .auto-draft-head-v28 p,.auto-draft-v28.waiting p{margin:0;color:var(--soft)}
 
-.draft-lock-count{text-align:center;min-width:92px;padding:10px 13px;border-radius:14px;background:var(--surface2);border:1px solid var(--line)}
+.draft-lock-count{text-align:center;min-width:92px;padding:10px 13px;background:var(--surface2);border:1px solid var(--line)}
 
 .draft-lock-count b,.draft-lock-count span{display:block}
 .draft-lock-count b{font-size:1.35rem}
@@ -418,7 +391,7 @@ body.modal-open-v25{overflow:auto !important}
 .auto-draft-team-v28 b{font-size:1.05rem}
 
 .auto-draft-picks-v28{display:grid;grid-template-columns:repeat(5,1fr);gap:7px}
-.auto-draft-picks-v28>div{padding:10px;background:var(--surface2);border-radius:12px;border:1px solid var(--line)}
+.auto-draft-picks-v28>div{padding:10px;background:var(--surface2);border:1px solid var(--line)}
 
 .auto-draft-picks-v28 small,.auto-draft-picks-v28 strong{display:block}
 .auto-draft-picks-v28 small{font-size:.72rem;color:var(--muted);font-weight:850}
@@ -426,7 +399,7 @@ body.modal-open-v25{overflow:auto !important}
 
 .draft-vs-v28{font-weight:900;color:var(--muted)}
 
-.auto-draft-model-v28{display:grid;grid-template-columns:auto auto 1fr;gap:12px;align-items:center;margin-top:12px;padding:12px 14px;border-radius:12px;background:color-mix(in srgb,var(--surface2) 88%,var(--accent) 12%)}
+.auto-draft-model-v28{display:grid;grid-template-columns:auto auto 1fr;gap:12px;align-items:center;margin-top:12px;padding:12px 14px;background:color-mix(in srgb,var(--surface2) 88%,var(--accent) 12%)}
 
 .auto-draft-model-v28 small{font-size:.78rem;color:var(--muted);font-weight:850}
 .auto-draft-model-v28 strong{font-size:1.12rem}
@@ -458,7 +431,7 @@ body.modal-open-v25{overflow:auto !important}
 
 .live-draft-side-v28>b{font-size:1rem}
 
-.live-draft-side-v28>div{display:grid;grid-template-columns:42px 1fr 1fr;gap:8px;align-items:center;padding:6px 10px;border-radius:10px;background:var(--surface2)}
+.live-draft-side-v28>div{display:grid;grid-template-columns:42px 1fr 1fr;gap:8px;align-items:center;padding:6px 10px;background:var(--surface2)}
 
 .live-draft-side-v28 small{font-size:.72rem;color:var(--muted);font-weight:850}
 
