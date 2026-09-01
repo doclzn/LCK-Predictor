@@ -23,3 +23,7 @@ LCK_Predictor_V28_AUTO_DRAFT/_gol_*.html
 
 __pycache__/
 *.pyc
+
+# Backups locais de governanca e banco (nao versionar)
+LCK_Predictor_V28_AUTO_DRAFT/governance.backup-*/
+LCK_Predictor_V28_AUTO_DRAFT/governance/*.backup-*

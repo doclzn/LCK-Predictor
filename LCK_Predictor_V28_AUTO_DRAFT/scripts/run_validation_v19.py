@@ -301,7 +301,72 @@ def extract_frozen(pipe,features):
             'means':[float(x) for x in sc.mean_],'scales':[float(x) for x in sc.scale_],
             'coef':[float(x) for x in lr.coef_[0]],'intercept':float(lr.intercept_[0])}
 
-def run(db=DB):
+# --- Protecao do congelamento selado (V21) -------------------------------------
+# Este script REESCREVE validation_freeze_v19. Quando o congelamento esta selado
+# sob governance/GOVERNANCE_LOCK_V21.json, reescrever quebra as digitais: a partir
+# dai `v21_verified_v19_freezes()` nao devolve candidata alguma e a captura
+# prospectiva para EM SILENCIO -- so restam eventos FROZEN_MODEL_DRIFT no log.
+# Foi o que aconteceu em 2026-08-27, durante a investigacao da LPL: a captura
+# ficou desligada por dias e os mapas de LCK desse periodo foram perdidos, porque
+# previsao prospectiva so vale se registrada antes do resultado.
+LOCK_FILE=ROOT/'governance'/'GOVERNANCE_LOCK_V21.json'
+
+def _canonical_hash(obj):
+    """Identico a _v21_hash_obj em server.py. Coberto por tests/test_governance_v21.py."""
+    import hashlib
+    return hashlib.sha256(json.dumps(obj,ensure_ascii=False,sort_keys=True,
+                                     separators=(',',':')).encode('utf-8')).hexdigest()
+
+def sealed_candidates(db):
+    """Candidatas cuja definicao atual no banco confere com o lock."""
+    try:
+        expected=json.loads(LOCK_FILE.read_text(encoding='utf-8')).get('candidate_definition_hashes') or {}
+    except Exception:
+        return []
+    if not expected:
+        return []
+    out=[]
+    try:
+        con=sqlite3.connect(db);con.row_factory=sqlite3.Row
+        rows=con.execute("SELECT * FROM validation_freeze_v19 "
+                         "WHERE status='FROZEN_AWAITING_PROSPECTIVE'").fetchall()
+        con.close()
+    except Exception:
+        return []
+    for r in rows:
+        obj={'candidate':r['candidate'],'frozen_at':r['frozen_at'],
+             'features':json.loads(r['features_json'] or '[]'),
+             'model':json.loads(r['model_json'] or '{}')}
+        if expected.get(r['candidate'])==_canonical_hash(obj):
+            out.append(r['candidate'])
+    return out
+
+def assert_reseal_allowed(db,allow_reseal):
+    sealed=sealed_candidates(db)
+    if not sealed or allow_reseal:
+        return
+    try:
+        con=sqlite3.connect(db)
+        n=con.execute('SELECT COUNT(DISTINCT game_id) FROM prospective_predictions_v19').fetchone()[0]
+        con.close()
+    except Exception:
+        n='?'
+    raise SystemExit(
+        "\nABORTADO: o congelamento V19 esta selado sob GOVERNANCE_LOCK_V21.json.\n"
+        f"  Candidatas seladas: {', '.join(sealed)}\n"
+        f"  Historico prospectivo acumulado: {n} mapas\n\n"
+        "Rodar este script reescreveria o congelamento, quebrando as digitais do\n"
+        "lock e DESLIGANDO a captura prospectiva em silencio. O historico acima\n"
+        "deixaria de valer como prova.\n\n"
+        "Se a intencao e mesmo criar uma pre-registro nova, e um ato deliberado:\n"
+        "  1. python3 scripts/run_validation_v19.py --allow-reseal\n"
+        "  2. python3 scripts/seal_governance_v21.py --confirm --note '<motivo>'\n"
+        "O passo 2 e obrigatorio -- sem ele a captura fica desligada.\n\n"
+        "Para apenas EXPERIMENTAR sem tocar no congelamento oficial, use uma copia\n"
+        "do banco: --db /caminho/para/copia.sqlite\n")
+
+def run(db=DB,allow_reseal=False):
+    assert_reseal_allowed(db,allow_reseal)
     t0=time.time();con=sqlite3.connect(db)
     con.row_factory=sqlite3.Row
     df=build_dataset(con)
@@ -408,4 +473,9 @@ def run(db=DB):
     return report
 
 if __name__=='__main__':
-    ap=argparse.ArgumentParser();ap.add_argument('--db',default=str(DB));args=ap.parse_args();run(Path(args.db))
+    ap=argparse.ArgumentParser()
+    ap.add_argument('--db',default=str(DB))
+    ap.add_argument('--allow-reseal',action='store_true',
+                    help='permite reescrever um congelamento selado; exige reselar depois')
+    args=ap.parse_args()
+    run(Path(args.db),allow_reseal=args.allow_reseal)

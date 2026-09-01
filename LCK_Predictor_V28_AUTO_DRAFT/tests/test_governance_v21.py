@@ -11,7 +11,10 @@ def test_governance_v21(server):
     m = server
     base=m.v21_governance_summary()
     assert base['integrity']['ok'],base['integrity']
-    assert len(base['experiments'])==5
+    # Nao travar num numero: o registro cresce a cada selagem. O invariante e
+    # que todo experimento registrado carregue sua digital.
+    assert base['experiments']
+    assert all(e.get('definition_hash') for e in base['experiments'])
     assert base['live_protocol']['hash_ok']
     assert base['live_protocol']['status']=='PRE_REGISTERED_NOT_TRAINED'
     # A versão antiga exigia decision=='COLLECTING' para todos, o que era um
@@ -72,3 +75,76 @@ def test_governance_v21_promotion_flow(server, monkeypatch):
             events=m.db_rows("SELECT * FROM governance_events_v21 WHERE event_type='FROZEN_MODEL_DRIFT'")
             assert events
         finally:m.DB=old
+
+
+def _load_validation_script():
+    import importlib.util
+    spec=importlib.util.spec_from_file_location(
+        'run_validation_v19_guard', ROOT/'scripts'/'run_validation_v19.py')
+    mod=importlib.util.module_from_spec(spec);spec.loader.exec_module(mod)
+    return mod
+
+
+def test_guard_hash_matches_server(server):
+    """run_validation_v19.py reimplementa o hash canonico do server.py para nao
+    depender de importa-lo. Se as duas implementacoes divergirem, o guarda passa
+    a achar que nada esta selado e volta a reescrever o congelamento em silencio
+    -- exatamente a falha que ele existe para impedir. Este teste amarra as duas."""
+    v=_load_validation_script()
+    for row in server.db_rows('SELECT * FROM validation_freeze_v19'):
+        obj,expected=server._v21_db_freeze_definition(row)
+        assert v._canonical_hash(obj)==expected, row['candidate']
+
+
+def test_guard_agrees_with_server_on_what_is_sealed(server):
+    """O guarda e o server precisam concordar sobre quais candidatas estao
+    seladas; se o guarda vir menos, ele libera uma reescrita que quebraria a
+    captura."""
+    v=_load_validation_script()
+    assert set(v.sealed_candidates(server.DB)) == {
+        f['candidate'] for f in server.v21_verified_v19_freezes()}
+
+
+def test_guard_blocks_rewrite_when_sealed(server, tmp_path, monkeypatch):
+    """Com congelamento selado, rodar o script sem --allow-reseal deve abortar.
+
+    O estado selado e montado aqui em vez de depender do estado real do repo:
+    o guarda precisa estar coberto mesmo quando o congelamento de producao
+    esta dessincronizado (que e justamente quando ninguem percebe a falha)."""
+    import pytest
+    v=_load_validation_script()
+
+    db=tmp_path/'sealed.sqlite'
+    shutil.copy2(ROOT/'data'/'lck_data_v1.sqlite', db)
+    con=sqlite3.connect(db);con.row_factory=sqlite3.Row
+    rows=con.execute("SELECT * FROM validation_freeze_v19 "
+                     "WHERE status='FROZEN_AWAITING_PROSPECTIVE'").fetchall()
+    con.close()
+    assert rows, 'fixture precisa de ao menos uma candidata congelada'
+
+    hashes={}
+    for r in rows:
+        hashes[r['candidate']]=v._canonical_hash({
+            'candidate':r['candidate'],'frozen_at':r['frozen_at'],
+            'features':json.loads(r['features_json'] or '[]'),
+            'model':json.loads(r['model_json'] or '{}')})
+    lock=tmp_path/'GOVERNANCE_LOCK_V21.json'
+    lock.write_text(json.dumps({'candidate_definition_hashes':hashes}),encoding='utf-8')
+    monkeypatch.setattr(v,'LOCK_FILE',lock)
+
+    assert set(v.sealed_candidates(db))==set(hashes)
+
+    with pytest.raises(SystemExit) as e:
+        v.assert_reseal_allowed(db, allow_reseal=False)
+    assert 'ABORTADO' in str(e.value)
+
+    v.assert_reseal_allowed(db, allow_reseal=True)  # com a flag, passa
+
+
+def test_guard_allows_rewrite_when_lock_absent(server, tmp_path, monkeypatch):
+    """Sem lock nao ha pre-registro a proteger: o script tem de rodar normalmente,
+    senao o guarda inviabilizaria o primeiro congelamento do projeto."""
+    v=_load_validation_script()
+    monkeypatch.setattr(v,'LOCK_FILE',tmp_path/'nao_existe.json')
+    assert v.sealed_candidates(ROOT/'data'/'lck_data_v1.sqlite')==[]
+    v.assert_reseal_allowed(ROOT/'data'/'lck_data_v1.sqlite', allow_reseal=False)
